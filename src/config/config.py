@@ -30,10 +30,6 @@ class AppSettings(BaseSettings):
 
     SYSTEM_PROMPT: str = ""
 
-    # Optional API keys for enhanced POI search
-    FOURSQUARE_API_KEY: str | None = None
-    LOCATIONIQ_API_KEY: str | None = None
-
     @property
     def LANGUAGE_MODEL(self) -> str:
         return self.LANGUAGE_MODEL_DEV if self.DEBUG else self.LANGUAGE_MODEL_PROD

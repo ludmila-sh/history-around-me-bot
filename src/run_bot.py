@@ -26,18 +26,13 @@ from telegram.ext import (
 
 from src.config.config import app_settings
 from src.config.logging_config import get_logger, setup_logging
-from src.places_api import get_nearby_places
+from src.places_api import describe_error, get_nearby_places
 from src.utils import generate_answer
 
 logger = get_logger(__name__)
 
 # Store user context for callback handling
 user_contexts: dict[int, dict[str, Any]] = {}
-
-AI_DISCLAIMER = (
-    "\n\n⚠️ <i>Disclaimer:</i> This information is AI-generated. "
-    "Please verify important details from official sources."
-)
 
 CATEGORY_INFO = {
     "history_culture": {"emoji": "🏛️", "name": "History & Culture", "name_ru": "История и культура"},
@@ -55,7 +50,9 @@ async def send_welcome(update: Update, context: CallbackContext):
         "🏛️ <b>Welcome to the History Around Me Bot!</b> 🌍\n\n"
         "I'm your AI-powered travel guide! Send your location to discover "
         "fascinating historical and cultural landmarks nearby.\n\n"
-        "📍 Click the button below to share your current location."
+        "📍 Click the button below to share your current location.\n\n"
+        "<i>Descriptions are AI-generated and may contain mistakes, "
+        "so double-check opening hours and prices.</i>"
     )
 
     button = KeyboardButton("📍 Send Location", request_location=True)
@@ -83,10 +80,13 @@ async def location(update: Update, context: CallbackContext) -> None:
     user_id = update.message.from_user.id
 
     logger.info(f"Received location from user {user_id}")
+    if app_settings.DEBUG:
+        # Dev only: rounded to ~100 m, enough to reproduce a search; never logged in prod
+        logger.info(f"DEBUG location: {lat:.3f}, {lon:.3f}")
 
     await context.bot.send_chat_action(chat_id=update.effective_chat.id, action="typing")
 
-    location_name = _get_location_name_with_fallbacks(lat, lon)
+    location_name = _get_location_name(lat, lon)
     user_lang = _detect_user_language(update)
     logger.info(f"Detected user language: {user_lang}")
 
@@ -334,7 +334,7 @@ async def handle_callback_query(update: Update, context: CallbackContext):
             detailed_info = generate_detailed_place_info(place, lang)
             keyboard = [[InlineKeyboardButton("⬅️ Back", callback_data="back_categories")]]
             await query.edit_message_text(
-                detailed_info + AI_DISCLAIMER,
+                detailed_info,
                 reply_markup=InlineKeyboardMarkup(keyboard),
                 parse_mode=ParseMode.HTML,
             )
@@ -513,11 +513,7 @@ Requirements:
 async def handle_text_message(update: Update, context: CallbackContext):
     await context.bot.send_chat_action(chat_id=update.effective_chat.id, action="typing")
     llm_response = generate_answer(update.message.text)
-    disclaimer = (
-        "\n\n⚠️ <i>Disclaimer:</i> This response is AI-generated. "
-        "Please verify important information from reliable sources."
-    )
-    await update.message.reply_text(escape(llm_response) + disclaimer, parse_mode=ParseMode.HTML)
+    await update.message.reply_text(escape(llm_response), parse_mode=ParseMode.HTML)
 
 
 async def handle_error(update: object, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -526,21 +522,8 @@ async def handle_error(update: object, context: ContextTypes.DEFAULT_TYPE) -> No
         await update.effective_message.reply_text("⚠️ Something went wrong. Please try again.")
 
 
-def _get_location_name_with_fallbacks(lat: float, lon: float) -> str:
-    """Get location name using multiple reverse geocoding APIs with fallbacks."""
-    try:
-        response = requests.get(
-            "https://api.bigdatacloud.net/data/reverse-geocode-client",
-            params={"latitude": lat, "longitude": lon, "localityLanguage": "en"},
-            timeout=8,
-        )
-        response.raise_for_status()
-        location_data = response.json()
-        if location_data.get("locality") and location_data.get("countryName"):
-            return f"{location_data['locality']}, {location_data['countryName']}"
-    except Exception as e:
-        logger.warning(f"BigDataCloud API failed: {e}")
-
+def _get_location_name(lat: float, lon: float) -> str:
+    """Return "City, Country" via Nominatim reverse geocoding, or coordinates as a fallback."""
     try:
         response = requests.get(
             "https://nominatim.openstreetmap.org/reverse",
@@ -560,28 +543,7 @@ def _get_location_name_with_fallbacks(lat: float, lon: float) -> str:
         if city and country:
             return f"{city}, {country}"
     except Exception as e:
-        logger.warning(f"Nominatim API failed: {e}")
-
-    if app_settings.LOCATIONIQ_API_KEY:
-        try:
-            response = requests.get(
-                "https://us1.locationiq.com/v1/reverse.php",
-                params={
-                    "key": app_settings.LOCATIONIQ_API_KEY,
-                    "lat": lat,
-                    "lon": lon,
-                    "format": "json",
-                },
-                timeout=8,
-            )
-            response.raise_for_status()
-            address = response.json().get("address", {})
-            city = address.get("city") or address.get("town") or address.get("village")
-            country = address.get("country")
-            if city and country:
-                return f"{city}, {country}"
-        except Exception as e:
-            logger.warning(f"LocationIQ API failed: {e}")
+        logger.warning(f"Nominatim reverse geocoding failed: {describe_error(e)}")
 
     return f"Coordinates: {lat:.4f}, {lon:.4f}"
 
