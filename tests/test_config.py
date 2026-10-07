@@ -3,8 +3,8 @@ from src.config.config import AppSettings
 BASE = {
     "TELEGRAM_BOT_TOKEN": "t",
     "OPENROUTER_API_KEY": "k",
-    "LLM_MODEL_DEV": "cheap/dev-model",
-    "LLM_MODEL_PROD": "good/prod-model",
+    "LANGUAGE_MODEL_DEV": "cheap/dev-model",
+    "LANGUAGE_MODEL_PROD": "good/prod-model",
 }
 
 

@@ -25,8 +25,8 @@ class AppSettings(BaseSettings):
     ADMIN_USER_IDS: list[int] = []
 
     OPENROUTER_API_KEY: str
-    LLM_MODEL_DEV: str
-    LLM_MODEL_PROD: str
+    LANGUAGE_MODEL_DEV: str
+    LANGUAGE_MODEL_PROD: str
 
     SYSTEM_PROMPT: str = ""
 
@@ -36,7 +36,7 @@ class AppSettings(BaseSettings):
 
     @property
     def LANGUAGE_MODEL(self) -> str:
-        return self.LLM_MODEL_DEV if self.DEBUG else self.LLM_MODEL_PROD
+        return self.LANGUAGE_MODEL_DEV if self.DEBUG else self.LANGUAGE_MODEL_PROD
 
     def load_prompts_from_yaml(self) -> None:
         with PROMPTS_FILE.open(encoding="utf-8") as file:
