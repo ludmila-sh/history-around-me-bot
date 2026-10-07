@@ -22,6 +22,9 @@ def generate_answer(user_input: str, system_prompt: str = None) -> str:
     system_prompt = system_prompt if system_prompt else app_settings.SYSTEM_PROMPT
     if not system_prompt:
         raise ValueError("Prompt was not specified.")
+        
+    # Log the user input prompt for debugging
+    logger.info(f"LLM input prompt: {user_input[:500]}{'...' if len(user_input) > 500 else ''}")
 
     model = app_settings.LANGUAGE_MODEL
 

@@ -8,16 +8,16 @@ from src.config.config import app_settings
 logger = getLogger(__name__)
 
 
-def get_nearby_places(lat: float, lon: float, radius: int = 10000, lang: str = "en") -> List[Dict[Any, Any]]:
+def get_nearby_places(lat: float, lon: float, radius: int = 10000, lang: str = "en") -> Dict[str, List[Dict[Any, Any]]]:
     """
-    Get nearby places of interest using multiple APIs with fallback mechanisms.
-    Searches within 10km radius and returns 5-7 nearest places to avoid empty results.
+    Get nearby places of interest categorized by type using multiple APIs with fallback mechanisms.
+    Searches within 10km radius and returns places organized by categories.
     
     :param lat: Latitude
     :param lon: Longitude  
     :param radius: Search radius in meters (default 10000m = 10km)
     :param lang: Language code (en or ru)
-    :return: List of 5-7 nearest places with enriched information
+    :return: Dictionary with categorized places
     """
     logger.info(f"Searching for POIs near {lat}, {lon} within {radius}m radius")
     
@@ -63,27 +63,22 @@ def get_nearby_places(lat: float, lon: float, radius: int = 10000, lang: str = "
     
     if not all_places:
         logger.warning("All POI APIs failed or returned no results")
-        return []
+        return {}
     
     # Remove duplicates based on name and proximity (within 50m)
     unique_places = _remove_duplicate_places(all_places)
     logger.info(f"After deduplication: {len(unique_places)} unique places")
     
-    # Sort by distance and return 5-7 nearest places
-    sorted_places = sorted(unique_places, key=lambda x: x["distance"])
+    # Categorize all places
+    categorized_places = _categorize_places(unique_places)
     
-    # Return 5-7 places depending on how many we found
-    if len(sorted_places) >= 7:
-        result_count = 7
-    elif len(sorted_places) >= 5:
-        result_count = 6
-    else:
-        result_count = min(5, len(sorted_places))
+    # Sort each category by distance
+    for category in categorized_places:
+        categorized_places[category] = sorted(categorized_places[category], key=lambda x: x["distance"])
     
-    final_places = sorted_places[:result_count]
-    logger.info(f"Returning {len(final_places)} nearest places (distances: {[int(p['distance']) for p in final_places[:3]]}m...)")
+    logger.info(f"Categorized places: {[(cat, len(places)) for cat, places in categorized_places.items()]}")
     
-    return final_places
+    return categorized_places
 
 
 def _get_foursquare_places(lat: float, lon: float, radius: int, lang: str = "en") -> List[Dict[Any, Any]]:
@@ -249,9 +244,17 @@ def _get_nominatim_places(lat: float, lon: float, radius: int, lang: str = "en")
                 "accept-language": lang
             }
             
-            response = requests.get(base_url, params=params, timeout=10)
+            headers = {
+                'User-Agent': 'HistoryAroundMeBot/1.0 (https://github.com/user/history-bot; contact@example.com)'
+            }
+            
+            response = requests.get(base_url, params=params, headers=headers, timeout=10)
             response.raise_for_status()
             data = response.json()
+            
+            # Add small delay to respect rate limits
+            import time
+            time.sleep(0.1)
             
             if not data or "display_name" not in data:
                 continue
@@ -288,11 +291,14 @@ def _get_nominatim_places(lat: float, lon: float, radius: int, lang: str = "en")
 
 def _get_wikipedia_places(lat: float, lon: float, radius: int, lang: str = "en") -> List[Dict[Any, Any]]:
     """
-    Use Wikipedia geosearch as last resort.
+    Get places from Wikipedia geosearch API and fetch extracts for each place.
     """
-    wiki_lang = "en" if lang == "en" else "ru"
-    url = f"https://{wiki_lang}.wikipedia.org/w/api.php"
+    if lang == "ru":
+        url = "https://ru.wikipedia.org/w/api.php"
+    else:
+        url = "https://en.wikipedia.org/w/api.php"
     
+    # First, get nearby places
     params = {
         "action": "query",
         "list": "geosearch",
@@ -308,11 +314,16 @@ def _get_wikipedia_places(lat: float, lon: float, radius: int, lang: str = "en")
         data = response.json()
         
         places = []
+        page_ids = []
+        
+        # Collect places and page IDs
         for page in data.get("query", {}).get("geosearch", []):
             distance = page.get("dist", 0)
             if distance > radius:
                 continue
                 
+            page_ids.append(str(page.get("pageid")))
+            
             place = {
                 "name": page.get("title", "Unknown Place"),
                 "description": "Wikipedia Article",
@@ -322,9 +333,51 @@ def _get_wikipedia_places(lat: float, lon: float, radius: int, lang: str = "en")
                 "distance": distance,
                 "source": "wikipedia",
                 "category": "Encyclopedia Entry",
-                "wikipedia_title": page.get("title", "")
+                "wikipedia_title": page.get("title", ""),
+                "pageid": page.get("pageid", 0)
             }
             places.append(place)
+        
+        # If we have page IDs, fetch extracts for them
+        if page_ids:
+            # Get extracts for all pages in one request
+            extract_params = {
+                "action": "query",
+                "prop": "extracts|info",
+                "exintro": 1,  # Only get intro paragraph
+                "explaintext": 1,  # Get plain text
+                "pageids": "|".join(page_ids),
+                "inprop": "url",  # Get URL
+                "format": "json"
+            }
+            
+            try:
+                extract_response = requests.get(url, params=extract_params, timeout=15)
+                extract_response.raise_for_status()
+                extract_data = extract_response.json()
+                
+                # Add extracts to places
+                for place in places:
+                    pageid = place.get("pageid")
+                    if pageid and str(pageid) in extract_data.get("query", {}).get("pages", {}):
+                        page_data = extract_data["query"]["pages"][str(pageid)]
+                        place["wikipedia_extract"] = page_data.get("extract", "")
+                        place["wikipedia_url"] = page_data.get("fullurl", "")
+                        
+                        # Set category based on extract content
+                        if place["wikipedia_extract"]:
+                            place["description"] = place["wikipedia_extract"][:100] + "..."
+                            
+                            # Determine if it's a historical place
+                            historical_keywords = ["history", "historic", "ancient", "century", "built", "castle", 
+                                                "monument", "memorial", "museum", "palace", "ruins"]
+                            
+                            extract_lower = place["wikipedia_extract"].lower()
+                            if any(keyword in extract_lower for keyword in historical_keywords):
+                                place["category"] = "Historical Site"
+                            
+            except Exception as e:
+                logger.error(f"Wikipedia extract fetch failed: {e}")
         
         return sorted(places, key=lambda x: x["distance"])[:8]
         
@@ -417,6 +470,112 @@ def _names_are_similar(name1: str, name2: str) -> bool:
     # If more than 60% overlap, consider similar
     similarity = overlap / total_unique if total_unique > 0 else 0
     return similarity > 0.6
+
+
+def _categorize_places(places: List[Dict[Any, Any]]) -> Dict[str, List[Dict[Any, Any]]]:
+    """
+    Categorize places into main categories for user discovery.
+    """
+    categories = {
+        "history_culture": [],
+        "food_drinks": [],
+        "shopping": [],
+        "parks_nature": [],
+        "entertainment": [],
+        "other": []
+    }
+    
+    for place in places:
+        category = _determine_place_category(place)
+        categories[category].append(place)
+    
+    # Remove empty categories
+    return {k: v for k, v in categories.items() if v}
+
+
+def _determine_place_category(place: Dict[Any, Any]) -> str:
+    """
+    Determine the category of a place based on its properties.
+    """
+    name = place.get("name", "").lower()
+    description = place.get("description", "").lower()
+    category = place.get("category", "").lower()
+    source = place.get("source", "")
+    
+    # Check for historical/cultural keywords
+    history_keywords = [
+        "museum", "castle", "church", "cathedral", "monument", "memorial", 
+        "historic", "archaeological", "palace", "fort", "tower", "ruins",
+        "gallery", "art", "culture", "heritage", "temple", "synagogue",
+        "mosque", "basilica", "abbey", "monastery", "library", "theatre",
+        "opera", "concert", "university", "school", "historic"
+    ]
+    
+    # Check for food/drinks keywords
+    food_keywords = [
+        "restaurant", "cafe", "bar", "pub", "bistro", "pizzeria", "bakery",
+        "food", "dining", "kitchen", "grill", "tavern", "brewery", "wine",
+        "coffee", "tea", "lunch", "dinner", "breakfast", "fast food",
+        "street food", "market", "deli"
+    ]
+    
+    # Check for shopping keywords
+    shopping_keywords = [
+        "shop", "store", "market", "mall", "boutique", "souvenir", "gift",
+        "antique", "books", "art", "craft", "shopping", "retail", "center"
+    ]
+    
+    # Check for parks/nature keywords
+    nature_keywords = [
+        "park", "garden", "forest", "lake", "river", "beach", "nature",
+        "botanical", "zoo", "playground", "green", "square", "plaza"
+    ]
+    
+    # Check for entertainment keywords
+    entertainment_keywords = [
+        "cinema", "theater", "club", "disco", "entertainment", "sports",
+        "stadium", "gym", "fitness", "bowling", "arcade", "casino",
+        "nightlife", "music", "venue", "hall"
+    ]
+    
+    # Combine all text for checking
+    all_text = f"{name} {description} {category}".lower()
+    
+    # Check categories in order of priority
+    if any(keyword in all_text for keyword in history_keywords):
+        return "history_culture"
+    elif any(keyword in all_text for keyword in food_keywords):
+        return "food_drinks"
+    elif any(keyword in all_text for keyword in shopping_keywords):
+        return "shopping"
+    elif any(keyword in all_text for keyword in nature_keywords):
+        return "parks_nature"
+    elif any(keyword in all_text for keyword in entertainment_keywords):
+        return "entertainment"
+    else:
+        return "other"
+
+
+def get_places_by_category_and_distance(categorized_places: Dict[str, List[Dict[Any, Any]]], 
+                                       category: str, max_distance: int = 1000) -> List[Dict[Any, Any]]:
+    """
+    Filter places by category and distance, return up to 5 closest places.
+    
+    :param categorized_places: Dictionary of categorized places
+    :param category: Category to filter by
+    :param max_distance: Maximum distance in meters
+    :return: List of filtered places
+    """
+    if category not in categorized_places:
+        return []
+    
+    # Filter by distance and take up to 5 closest
+    filtered_places = [
+        place for place in categorized_places[category] 
+        if place.get("distance", 0) <= max_distance
+    ]
+    
+    return filtered_places[:5]
 
 
 def _format_address(tags: dict) -> str:

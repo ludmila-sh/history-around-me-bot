@@ -1,6 +1,7 @@
 import asyncio
 from logging import getLogger
 import json
+from typing import Dict, List, Any
 
 import requests
 from telegram import Update, BotCommand, KeyboardButton, ReplyKeyboardMarkup, InlineKeyboardButton, InlineKeyboardMarkup
@@ -18,7 +19,7 @@ from telegram.ext import (
 
 from src.config.config import app_settings
 from src.config.logging_config import setup_logging
-from src.places_api import get_nearby_places
+from src.places_api import get_nearby_places, get_places_by_category_and_distance
 from src.utils import generate_answer, escape_markdown_v2
 
 logger = getLogger(__name__)
@@ -86,10 +87,15 @@ async def location(update: Update, context: CallbackContext) -> None:
 
     # Get nearby places within 10km radius
     logger.info("Searching for nearby places...")
-    places = get_nearby_places(lat, lon, radius=10000, lang=user_lang)
-    logger.info(f"Found {len(places)} places")
+    categorized_places = get_nearby_places(lat, lon, radius=10000, lang=user_lang)
+    logger.info(f"Found categorized places: {[(cat, len(places)) for cat, places in categorized_places.items()]}")
     
-    if not places:
+    # Debug: Log first few places in each category
+    for category, places in categorized_places.items():
+        if places:
+            logger.info(f"Category {category}: {[p['name'] for p in places[:3]]}")
+    
+    if not categorized_places:
         logger.info("No places found, sending fallback message")
         await send_reply_text(
             update, 
@@ -102,7 +108,7 @@ async def location(update: Update, context: CallbackContext) -> None:
     user_contexts[user_id] = {
         "location": location_name,
         "coordinates": (lat, lon),
-        "places": places,
+        "categorized_places": categorized_places,
         "language": user_lang
     }
     logger.info(f"Stored context for user {user_id} with language {user_lang}")
@@ -110,36 +116,17 @@ async def location(update: Update, context: CallbackContext) -> None:
     # Show typing indicator while generating AI overview
     await context.bot.send_chat_action(chat_id=update.effective_chat.id, action="typing")
 
-    # Generate brief overview
-    logger.info("Generating places overview...")
-    places_overview = await generate_places_overview(places, location_name, user_lang)
+    # Generate category-based overview with buttons
+    logger.info("Generating category overview...")
+    overview_response = await generate_category_overview(categorized_places, location_name, user_lang)
     
-    # Create inline buttons for each place
-    keyboard = []
-    for i, place in enumerate(places[:5]):  # Limit to 5 places
-        button_text = f"🏛️ {place['name'][:30]}..." if len(place['name']) > 30 else f"🏛️ {place['name']}"
-        keyboard.append([InlineKeyboardButton(button_text, callback_data=f"details_{i}")])
-    
-    # Add "More nearby places" button if there are more places
-    if len(places) > 5:
-        keyboard.append([InlineKeyboardButton("🔍 More nearby places", callback_data="more_places")])
-    
-    reply_markup = InlineKeyboardMarkup(keyboard)
-    
-    # Add disclaimer
-    disclaimer = (
-        "\n\n⚠️ *Disclaimer:* This information is AI\\-generated and may not be completely accurate\\. "
-        "Please verify important details from official sources\\."
-    )
-    
-    full_message = places_overview + disclaimer
-    
-    logger.info("Sending response to user...")
+    # Send the overview with category and distance buttons
     await update.message.reply_text(
-        full_message,
-        reply_markup=reply_markup,
+        overview_response["text"],
+        reply_markup=overview_response["keyboard"],
         parse_mode=ParseMode.MARKDOWN_V2
     )
+    
     logger.info("=== LOCATION HANDLER COMPLETED ===")
 
 
@@ -180,6 +167,230 @@ def _detect_user_language(update: Update) -> str:
     # Default to English
     logger.info("Using default language: English")
     return 'en'
+
+
+async def generate_category_overview(categorized_places: Dict[str, List[Dict[Any, Any]]], location_name: str, lang: str = "en") -> Dict[str, Any]:
+    """
+    Generate category-based overview with interactive buttons.
+    """
+    # Category emojis and names
+    category_info = {
+        "history_culture": {"emoji": "🏛️", "name": "History & Culture", "name_ru": "История и культура"},
+        "food_drinks": {"emoji": "🍽️", "name": "Food & Drinks", "name_ru": "Еда и напитки"},
+        "shopping": {"emoji": "🛍️", "name": "Shopping", "name_ru": "Покупки"},
+        "parks_nature": {"emoji": "🌳", "name": "Parks & Nature", "name_ru": "Парки и природа"},
+        "entertainment": {"emoji": "🎭", "name": "Entertainment", "name_ru": "Развлечения"},
+        "other": {"emoji": "📍", "name": "Other Places", "name_ru": "Другие места"}
+    }
+    
+    # Create overview text
+    if lang == "ru":
+        overview_text = f"📍 **{escape_markdown_v2(location_name)}**\n\n🎯 **Что вас интересует?**\n\n"
+        distance_text = "*Или выберите расстояние:*"
+    else:
+        overview_text = f"📍 **{escape_markdown_v2(location_name)}**\n\n🎯 **What are you looking for?**\n\n"
+        distance_text = "*Or choose distance:*"
+    
+    # Add category counts
+    available_categories = []
+    for category, places in categorized_places.items():
+        if category in category_info and places:
+            count = len(places)
+            emoji = category_info[category]["emoji"]
+            name = category_info[category]["name_ru"] if lang == "ru" else category_info[category]["name"]
+            available_categories.append(f"{emoji} {name} \\({count}\\)")
+    
+    if available_categories:
+        overview_text += "\n".join(available_categories)
+        overview_text += f"\n\n{distance_text}"
+    else:
+        if lang == "ru":
+            overview_text += "К сожалению, поблизости не найдено интересных мест\\."
+        else:
+            overview_text += "Unfortunately, no interesting places found nearby\\."
+    
+    # Create inline keyboard
+    keyboard = []
+    
+    # Category buttons (2 per row)
+    category_buttons = []
+    for category, places in categorized_places.items():
+        if category in category_info and places:
+            emoji = category_info[category]["emoji"]
+            name = category_info[category]["name_ru"] if lang == "ru" else category_info[category]["name"]
+            button_text = f"{emoji} {name}"
+            category_buttons.append(InlineKeyboardButton(button_text, callback_data=f"category_{category}"))
+    
+    # Arrange category buttons in rows of 2
+    for i in range(0, len(category_buttons), 2):
+        row = category_buttons[i:i+2]
+        keyboard.append(row)
+    
+    # Distance buttons
+    if lang == "ru":
+        distance_buttons = [
+            InlineKeyboardButton("👀 100м", callback_data="distance_100"),
+            InlineKeyboardButton("🚶 500м", callback_data="distance_500"),
+            InlineKeyboardButton("🚗 1км+", callback_data="distance_1000")
+        ]
+    else:
+        distance_buttons = [
+            InlineKeyboardButton("👀 100m", callback_data="distance_100"),
+            InlineKeyboardButton("🚶 500m", callback_data="distance_500"),
+            InlineKeyboardButton("🚗 1km+", callback_data="distance_1000")
+        ]
+    
+    keyboard.append(distance_buttons)
+    
+    # "Everything nearby" button
+    if lang == "ru":
+        keyboard.append([InlineKeyboardButton("📍 Всё поблизости", callback_data="category_all")])
+    else:
+        keyboard.append([InlineKeyboardButton("📍 Everything Nearby", callback_data="category_all")])
+    
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    
+    return {
+        "text": overview_text,
+        "keyboard": reply_markup
+    }
+
+
+async def generate_category_places_response(places: List[Dict[Any, Any]], category: str, lang: str = "en") -> Dict[str, Any]:
+    """
+    Generate response for specific category places.
+    """
+    category_info = {
+        "history_culture": {"emoji": "🏛️", "name": "History & Culture", "name_ru": "История и культура"},
+        "food_drinks": {"emoji": "🍽️", "name": "Food & Drinks", "name_ru": "Еда и напитки"},
+        "shopping": {"emoji": "🛍️", "name": "Shopping", "name_ru": "Покупки"},
+        "parks_nature": {"emoji": "🌳", "name": "Parks & Nature", "name_ru": "Парки и природа"},
+        "entertainment": {"emoji": "🎭", "name": "Entertainment", "name_ru": "Развлечения"},
+        "other": {"emoji": "📍", "name": "Other Places", "name_ru": "Другие места"},
+        "all": {"emoji": "📍", "name": "All Places", "name_ru": "Все места"}
+    }
+    
+    if category in category_info:
+        emoji = category_info[category]["emoji"]
+        name = category_info[category]["name_ru"] if lang == "ru" else category_info[category]["name"]
+    else:
+        emoji = "📍"
+        name = "Places" if lang == "en" else "Места"
+    
+    if lang == "ru":
+        response_text = f"{emoji} **{name}**\n\n"
+    else:
+        response_text = f"{emoji} **{name}**\n\n"
+    
+    # Add places with details
+    for i, place in enumerate(places[:5], 1):
+        distance = int(place.get("distance", 0))
+        name = escape_markdown_v2(place["name"])
+        
+        if category == "food_drinks":
+            # Special formatting for restaurants
+            response_text += f"⭐ **{name}** \({distance}m\)\n"
+            if place.get("description"):
+                # Make sure description is properly escaped and truncated safely
+                desc = place.get("description", "")
+                if len(desc) > 50:
+                    desc = desc[:47] + "..."
+                desc = escape_markdown_v2(desc)
+                response_text += f"_{desc}_\n\n"
+            else:
+                response_text += f"_{escape_markdown_v2(lang == 'ru' and 'Ресторан' or 'Restaurant')}_\n\n"
+        else:
+            # Standard formatting for other categories
+            response_text += f"⭐ **{name}** \\({distance}m\\)\n"
+            if place.get("description"):
+                # Make sure description is properly escaped and truncated safely
+                desc = place.get("description", "")
+                if len(desc) > 60:
+                    desc = desc[:57] + "..."
+                desc = escape_markdown_v2(desc)
+                response_text += f"_{desc}_\n\n"
+            else:
+                response_text += "\n"
+    
+    # Create keyboard with place buttons
+    keyboard = []
+    for i, place in enumerate(places[:5]):
+        button_text = f"📖 {place['name'][:25]}..." if len(place['name']) > 25 else f"📖 {place['name']}"
+        keyboard.append([InlineKeyboardButton(button_text, callback_data=f"place_details_{i}")])
+    
+    # Add back button
+    if lang == "ru":
+        keyboard.append([InlineKeyboardButton("⬅️ Назад к категориям", callback_data="back_categories")])
+    else:
+        keyboard.append([InlineKeyboardButton("⬅️ Back to Categories", callback_data="back_categories")])
+    
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    
+    return {
+        "text": response_text,
+        "keyboard": reply_markup
+    }
+
+
+async def generate_distance_places_response(places: List[Dict[Any, Any]], distance: int, lang: str = "en") -> Dict[str, Any]:
+    """
+    Generate response for distance-filtered places.
+    """
+    if lang == "ru":
+        if distance == 100:
+            response_text = f"👀 **В радиусе {distance}м** \\(что видно прямо сейчас\\)\n\n"
+        elif distance == 500:
+            response_text = f"🚶 **В радиусе {distance}м** \\(5 минут пешком\\)\n\n"
+        else:
+            response_text = f"🚗 **В радиусе {distance}м\\+** \\(стоит дойти\\)\n\n"
+    else:
+        if distance == 100:
+            response_text = f"👀 **Within {distance}m** \\(what you can see right now\\)\n\n"
+        elif distance == 500:
+            response_text = f"🚶 **Within {distance}m** \\(5\\-minute walk\\)\n\n"
+        else:
+            response_text = f"🚗 **Within {distance}m\\+** \\(worth the trip\\)\n\n"
+    
+    # Add places with details
+    for i, place in enumerate(places[:7], 1):
+        actual_distance = int(place.get("distance", 0))
+        name = escape_markdown_v2(place["name"])
+        
+        # Add category emoji
+        category = place.get("category", "").lower()
+        if "historic" in category or "museum" in category or "culture" in category:
+            emoji = "🏛️"
+        elif "food" in category or "restaurant" in category or "cafe" in category:
+            emoji = "🍽️"
+        elif "park" in category or "garden" in category:
+            emoji = "🌳"
+        else:
+            emoji = "📍"
+        
+        response_text += f"{emoji} **{name}** \\({actual_distance}m\\)\n"
+        if place.get("description"):
+            response_text += f"_{escape_markdown_v2(place['description'][:50])}..._\n\n"
+        else:
+            response_text += "\n"
+    
+    # Create keyboard with place buttons
+    keyboard = []
+    for i, place in enumerate(places[:5]):
+        button_text = f"📖 {place['name'][:25]}..." if len(place['name']) > 25 else f"📖 {place['name']}"
+        keyboard.append([InlineKeyboardButton(button_text, callback_data=f"place_details_{i}")])
+    
+    # Add back button
+    if lang == "ru":
+        keyboard.append([InlineKeyboardButton("⬅️ Назад к категориям", callback_data="back_categories")])
+    else:
+        keyboard.append([InlineKeyboardButton("⬅️ Back to Categories", callback_data="back_categories")])
+    
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    
+    return {
+        "text": response_text,
+        "keyboard": reply_markup
+    }
 
 
 async def generate_places_overview(places, location_name, lang="en"):
@@ -271,17 +482,106 @@ async def handle_callback_query(update: Update, context: CallbackContext):
         return
 
     user_context = user_contexts[user_id]
-    places = user_context["places"]
+    categorized_places = user_context.get("categorized_places", {})
     lang = user_context["language"]
 
-    if data.startswith("details_"):
+    if data.startswith("category_"):
+        # Handle category selection
+        await context.bot.send_chat_action(chat_id=update.effective_chat.id, action="typing")
+        
+        category = data.split("_")[1]
+        
+        # Debug the category mapping
+        logger.info(f"Callback category: '{category}'")
+        
+        # Map common category shortcuts to actual category keys
+        category_mapping = {
+            "food": "food_drinks",
+            "history": "history_culture",
+            "parks": "parks_nature",
+            "all": "all"  # Keep this as is
+        }
+        
+        # Map the category if needed
+        if category in category_mapping:
+            actual_category = category_mapping[category]
+            logger.info(f"Mapped '{category}' to '{actual_category}'")
+            category = actual_category
+        
+        if category == "all":
+            # Show all places mixed
+            all_places = []
+            for cat_places in categorized_places.values():
+                all_places.extend(cat_places)
+            places_to_show = sorted(all_places, key=lambda x: x["distance"])[:7]
+        else:
+            places_to_show = categorized_places.get(category, [])[:5]
+        
+        # Debug logging
+        logger.info(f"Category '{category}' selected. Available categories: {list(categorized_places.keys())}")
+        logger.info(f"Places to show: {len(places_to_show)} places")
+        if places_to_show:
+            logger.info(f"First place: {places_to_show[0]['name']}")
+        
+        if places_to_show:
+            # Store current places for proper indexing in callbacks
+            user_context["current_places"] = places_to_show
+            response = await generate_category_places_response(places_to_show, category, lang)
+            await query.edit_message_text(
+                response["text"],
+                reply_markup=response["keyboard"],
+                parse_mode=ParseMode.MARKDOWN_V2
+            )
+        else:
+            if lang == "ru":
+                await query.edit_message_text("❌ В этой категории ничего не найдено.")
+            else:
+                await query.edit_message_text("❌ No places found in this category.")
+    
+    elif data.startswith("distance_"):
+        # Handle distance filtering
+        await context.bot.send_chat_action(chat_id=update.effective_chat.id, action="typing")
+        
+        distance = int(data.split("_")[1])
+        
+        # Get all places within distance
+        all_places = []
+        for cat_places in categorized_places.values():
+            for place in cat_places:
+                if place.get("distance", 0) <= distance:
+                    all_places.append(place)
+        
+        places_to_show = sorted(all_places, key=lambda x: x["distance"])[:7]
+        
+        if places_to_show:
+            # Store current places for proper indexing in callbacks
+            user_context["current_places"] = places_to_show
+            response = await generate_distance_places_response(places_to_show, distance, lang)
+            await query.edit_message_text(
+                response["text"],
+                reply_markup=response["keyboard"],
+                parse_mode=ParseMode.MARKDOWN_V2
+            )
+        else:
+            if lang == "ru":
+                await query.edit_message_text(f"❌ В радиусе {distance}м ничего не найдено.")
+            else:
+                await query.edit_message_text(f"❌ No places found within {distance}m.")
+
+    elif data.startswith("details_"):
         # Show typing indicator while generating detailed info
         await context.bot.send_chat_action(chat_id=update.effective_chat.id, action="typing")
         
         # Show detailed information about a specific place
         place_index = int(data.split("_")[1])
-        if place_index < len(places):
-            place = places[place_index]
+        
+        # Get all places from categorized_places
+        all_places = []
+        for cat_places in categorized_places.values():
+            all_places.extend(cat_places)
+        
+        if place_index < len(all_places):
+            place = all_places[place_index]
             user_context["current_place"] = place["name"]  # Store current place for topic generation
             detailed_info = await generate_detailed_place_info(place, lang)
             
@@ -325,6 +625,44 @@ async def handle_callback_query(update: Update, context: CallbackContext):
             reply_markup=reply_markup,
             parse_mode=ParseMode.MARKDOWN_V2
         )
+
+    elif data == "back_categories":
+        # Go back to category overview
+        location_name = user_context["location"]
+        overview_response = await generate_category_overview(categorized_places, location_name, lang)
+        await query.edit_message_text(
+            overview_response["text"],
+            reply_markup=overview_response["keyboard"],
+            parse_mode=ParseMode.MARKDOWN_V2
+        )
+
+    elif data.startswith("place_details_"):
+        # Handle place details from category/distance views
+        await context.bot.send_chat_action(chat_id=update.effective_chat.id, action="typing")
+        
+        place_index = int(data.split("_")[2])
+        
+        # Store current places in context for proper indexing
+        current_places = user_context.get("current_places", [])
+        
+        if place_index < len(current_places):
+            place = current_places[place_index]
+            user_context["current_place"] = place["name"]
+            detailed_info = await generate_detailed_place_info(place, lang)
+            
+            keyboard = [[InlineKeyboardButton("⬅️ Back", callback_data="back_categories")]]
+            reply_markup = InlineKeyboardMarkup(keyboard)
+            
+            disclaimer = (
+                "\n\n⚠️ *Disclaimer:* This information is AI\\-generated\\. "
+                "Please verify important details from official sources\\."
+            )
+            
+            await query.edit_message_text(
+                detailed_info + disclaimer,
+                reply_markup=reply_markup,
+                parse_mode=ParseMode.MARKDOWN_V2
+            )
 
     elif data == "back_overview":
         # Go back to places overview
@@ -377,17 +715,64 @@ async def handle_callback_query(update: Update, context: CallbackContext):
 
 
 async def generate_detailed_place_info(place, lang="en"):
-    """Generate detailed AI-powered information about a specific place."""
+    """Generate detailed AI-powered information about a specific place based on its category."""
+    # Determine the place category
+    name = place.get("name", "").lower()
+    description = place.get("description", "").lower()
+    category = place.get("category", "")
+    place_type = place.get("tourism") or place.get("historic") or place.get("amenity", "")
+    
+    # Determine the category based on place properties
+    food_keywords = ["restaurant", "cafe", "bar", "pub", "bistro", "pizzeria", "bakery", "food"]
+    nature_keywords = ["park", "garden", "forest", "lake", "river", "beach", "nature"]
+    shopping_keywords = ["shop", "store", "market", "mall", "boutique", "souvenir"]
+    entertainment_keywords = ["cinema", "theater", "club", "disco", "entertainment", "sports"]
+    
+    # Combine all text for checking
+    all_text = f"{name} {description} {category} {place_type}".lower()
+    
+    # Determine place type for prompt selection
+    if any(keyword in all_text for keyword in food_keywords):
+        place_type = "restaurant"
+    elif any(keyword in all_text for keyword in nature_keywords):
+        place_type = "nature"
+    elif any(keyword in all_text for keyword in shopping_keywords):
+        place_type = "shopping"
+    elif any(keyword in all_text for keyword in entertainment_keywords):
+        place_type = "entertainment"
+    else:
+        place_type = "landmark"
+    
+    logger.info(f"Determined place type for {place['name']}: {place_type}")
+    
     place_data = {
         "name": place["name"],
-        "type": place.get("tourism") or place.get("historic") or place.get("amenity", "landmark"),
+        "type": place.get("tourism") or place.get("historic") or place.get("amenity", place_type),
         "distance": int(place["distance"]),
         "wikipedia": place.get("wikipedia_extract", ""),
         "description": place.get("description", ""),
         "website": place.get("website", "")
     }
+    
+    # Select appropriate prompt based on place type
+    if place_type == "restaurant":
+        prompt = f"""You are a passionate local foodie with 20+ years of experience. Provide engaging information about this restaurant/cafe:
 
-    prompt = f"""You are an expert local guide. Provide detailed, fascinating information about this landmark:
+Name: {place_data['name']}
+Type: {place_data['type']}
+Distance: {place_data['distance']}m away
+{f"Description: {place_data['description']}" if place_data['description'] else ""}
+
+Requirements:
+- Write in {'Russian' if lang == 'ru' else 'English'}
+- 3-4 sentences about the cuisine, atmosphere, and what makes it special
+- Include practical visitor information (best dishes, price range if known)
+- Be enthusiastic but honest
+- If you don't know specific details, suggest what might be good based on the restaurant type/name
+- Don't make up exact prices or menu items you're not certain about"""
+    
+    elif place_type == "nature":
+        prompt = f"""You are a nature-loving local guide. Provide engaging information about this natural attraction:
 
 Name: {place_data['name']}
 Type: {place_data['type']}
@@ -397,21 +782,129 @@ Distance: {place_data['distance']}m away
 
 Requirements:
 - Write in {'Russian' if lang == 'ru' else 'English'}
+- 3-4 sentences about what makes this place beautiful or special
+- Include practical visitor information (best time to visit, what to see)
+- Be engaging and informative
+- Focus on natural features and activities visitors can enjoy"""
+    
+    elif place_type == "shopping":
+        prompt = f"""You are a knowledgeable local shopping expert. Provide engaging information about this shopping venue:
+
+Name: {place_data['name']}
+Type: {place_data['type']}
+Distance: {place_data['distance']}m away
+{f"Description: {place_data['description']}" if place_data['description'] else ""}
+
+Requirements:
+- Write in {'Russian' if lang == 'ru' else 'English'}
+- 3-4 sentences about what makes this place worth visiting
+- Include practical visitor information (what they sell, price range if known)
+- Be enthusiastic but honest
+- If you don't know specific details, suggest what might be found based on the shop type/name"""
+    
+    elif place_type == "entertainment":
+        prompt = f"""You are a local entertainment expert. Provide engaging information about this entertainment venue:
+
+Name: {place_data['name']}
+Type: {place_data['type']}
+Distance: {place_data['distance']}m away
+{f"Description: {place_data['description']}" if place_data['description'] else ""}
+
+Requirements:
+- Write in {'Russian' if lang == 'ru' else 'English'}
+- 3-4 sentences about what makes this place fun or interesting
+- Include practical visitor information (what to expect, best times to visit)
+- Be engaging and informative
+- Focus on the experience visitors can expect"""
+    
+    else:  # Default historical/cultural landmark
+        # Check if we have Wikipedia extract
+        has_wikipedia_data = place.get('wikipedia_extract', '') != ''
+        
+        if has_wikipedia_data:
+            # We have Wikipedia data, use it as the primary source
+            prompt = f"""You are an expert local guide with 20+ years of experience. Provide detailed, fascinating information about this landmark using the Wikipedia extract provided:
+
+Name: {place_data['name']}
+Type: {place_data['type']}
+Distance: {place_data['distance']}m away
+Wikipedia extract: {place.get('wikipedia_extract', '')}
+
+Requirements:
+- Write in {'Russian' if lang == 'ru' else 'English'}
+- 3-4 sentences with interesting historical/cultural facts from the Wikipedia extract
+- Include practical visitor information if relevant
+- Be engaging and informative like a passionate local guide
+- Focus on what makes this place special or unique
+- Use the Wikipedia information but make it sound like you're a local expert
+- Don't start with phrases like 'According to Wikipedia'"""
+        else:
+            # No Wikipedia data, use generic prompt but be more specific about local knowledge
+            prompt = f"""You are an expert local guide with 20+ years of experience. Provide detailed, fascinating information about this landmark:
+
+Name: {place_data['name']}
+Type: {place_data['type']}
+Distance: {place_data['distance']}m away
+{f"Description: {place_data['description']}" if place_data['description'] else ""}
+
+Requirements:
+- Write in {'Russian' if lang == 'ru' else 'English'}
 - 3-4 sentences with interesting historical/cultural facts
 - Include practical visitor information if relevant
 - Be engaging and informative
 - Focus on what makes this place special or unique
-- Don't just repeat basic information"""
+- If you don't have specific information about this place, be honest and suggest what visitors might find interesting about similar places in the area
+- Don't make up historical facts if you're uncertain"""
 
     try:
         logger.info(f"Generating detailed info for {place_data['name']}...")
+        
+        # Log place data for debugging
+        logger.info(f"Place data: {place}")
+        
+        # Log if we have Wikipedia extract
+        if place.get('wikipedia_extract'):
+            logger.info(f"Wikipedia extract available: {place.get('wikipedia_extract')[:200]}...")
+        else:
+            logger.info("No Wikipedia extract available for this place")
+            
         detailed_info = generate_answer(prompt)
-        result = f"🏛️ **{escape_markdown_v2(place['name'])}**\n\n{escape_markdown_v2(detailed_info)}"
+        
+        # Use appropriate emoji based on place type
+        if place_type == "restaurant":
+            emoji = "🍽️"
+        elif place_type == "nature":
+            emoji = "🌳"
+        elif place_type == "shopping":
+            emoji = "🛍️"
+        elif place_type == "entertainment":
+            emoji = "🎭"
+        else:
+            emoji = "🏛️"
+        
+        # Make sure to escape all text properly for MarkdownV2
+        escaped_name = escape_markdown_v2(place['name'])
+        escaped_info = escape_markdown_v2(detailed_info)
+            
+        result = f"{emoji} **{escaped_name}**\n\n{escaped_info}"
+        
+        # Add links section with proper formatting
+        links = []
         
         if place.get("website"):
-            result += f"\n\n🌐 [Official Website]({place['website']})"
+            # Make sure URLs are properly formatted for Telegram
+            website_url = place['website']
+            if not website_url.startswith("http"):
+                website_url = "https://" + website_url
+            links.append(f"🌐 [Official Website]({website_url})")
+            
         if place.get("wikipedia_url"):
-            result += f"\n📖 [Wikipedia]({place['wikipedia_url']})"
+            wiki_url = place['wikipedia_url']
+            links.append(f"📖 [Wikipedia]({wiki_url})")
+            
+        if links:
+            # Join with properly escaped pipe character
+            result += "\n\n" + " \| ".join(links)
             
         return result
     except Exception as e:
