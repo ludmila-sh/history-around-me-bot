@@ -8,29 +8,35 @@ It is designed primarily for my own trips, not as a commercial product yet: prio
 
 ## Stack
 
-Python 3.12, pydantic-settings; FastAPI if it is a service. Dependencies in `requirements*.txt`, tool settings in `pyproject.toml`.
+Python 3.12, python-telegram-bot (async), pydantic-settings, LLM via OpenRouter (OpenAI SDK). Dependencies in `requirements*.txt` with pinned versions, tool settings in `pyproject.toml` (ruff).
+
+This is an existing project: its current structure and conventions win over the generic scaffold. Do not migrate `src/` to `app/` or introduce scaffold tools (mypy, pre-commit) unless I ask.
 
 ## Structure
 
-- `app/` — code: `config.py`, `logging_config.py`, `main.py`, `services/`. For a service add `api/` (thin handlers) and `domain/` (models and business logic).
+- `src/` — code: `run_bot.py` (entry point, Telegram handlers), `places_api.py` (place search), `utils.py` (LLM calls, formatting), `config/` (`config.py`, `logging_config.py`).
+- `data/prompts.yaml` — LLM prompts.
 - `tests/` — pytest tests.
-- `docs/` — prompts and notes for humans.
-- `logs/`, `output/` — runtime artifacts, not committed.
+- `logs/` — runtime artifacts, not committed.
 - `credentials/` — local access files, not committed, the agent does not read them.
 - `ROADMAP.md` — goal and milestones. `STATUS.md` — current state, overwritten.
 
 ## Commands
 
-- Check everything: `ruff check . && ruff format --check . && mypy app && pytest`
-- Run a script: `python -m app.main`. Run a service: `uvicorn app.main:app --reload`
-- Hooks: `pre-commit install`
+- Check everything: `ruff check . && ruff format --check . && pytest`
+- Run the bot locally: `python -m src.run_bot`
+
+## Environments
+
+- Local: `.env` holds the token of a separate dev Telegram bot. Never run locally with the prod token: two pollers on one token conflict.
+- Prod: deployed on Koyeb, configured through Koyeb environment variables.
+- `DEBUG=True` (dev) and `DEBUG=False` (prod) select different LLM models: a cheap one for testing, a better one for real use.
 
 ## Conventions
 
-- Settings only through `app/config.py` (`settings`); no `os.environ` anywhere else.
-- Logs via `get_logger(__name__)`, no `print`.
-- Business logic in `services/` (or `domain/`), not in handlers.
-- Interface to a service: for a prototype or demo, Streamlit (but it needs a server); for a tool delivered to a client, FastAPI + Jinja + htmx. A separate React app only if it cannot be avoided.
+- Settings only through `src/config/config.py` (`app_settings`); no `os.environ` anywhere else.
+- Logs via `getLogger(__name__)`, no `print`. Do not log user coordinates or message text.
+- Interface is the Telegram bot. Handlers stay thin; business logic lives in separate modules, not in handlers.
 
 ## Database (if the project has one)
 
@@ -44,7 +50,7 @@ Python 3.12, pydantic-settings; FastAPI if it is a service. Dependencies in `req
 
 ## README
 
-I do not write READMEs by hand: you maintain it following the structure already laid out in `README.md`. Rules:
+I do not write READMEs by hand: you maintain it following the structure already laid out in `README.md`. If `README.md`, `STATUS.md` or `ROADMAP.md` still contain template placeholders, fill them from the actual project; never describe tools or commands the project does not have. Rules:
 - Write in English, briefly: a README is read to start the project quickly and understand what it does.
 - Sections: one-sentence description, Quick start (install, `.env` setup, run), Configuration (table of variables without values), Usage (example input and output), Project structure, Development (checks, hooks), Deployment. Delete an empty section, do not add extra ones.
 - Update the README when the way to run, the environment variables or the structure change. Do not duplicate what is in `ROADMAP.md` and `STATUS.md`.

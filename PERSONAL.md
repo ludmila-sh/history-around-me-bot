@@ -1,6 +1,6 @@
 # Personal instructions — Jamila
 
-*Updated: 2026-10-07. Instructions for Claude Code. At the root of dev-kit this file is the personal layer; in new projects it becomes `PERSONAL.md` (see README).*
+*Updated: 2026-10-07. Instructions for Claude Code.*
 
 ## Who I am and what I do
 
@@ -68,7 +68,7 @@ Address me as "Jamila". Backend engineer, ~10 years of enterprise Python. I am b
 ### Constraints across all projects
 - Default stack: Python, FastAPI, pandas; modern versions, nothing outdated. Minimum of libraries, but do not reinvent the wheel: use reliable, proven ones.
 - Cheap or free, minimum of subscriptions; prefer open source of comparable quality. If none exists, do not insist, say so.
-- The solution must work without my support: no server to maintain, no keys that expire; the client must be able to manage it themselves.
+- Client products must work without my support: no server to maintain, no keys that expire; the client must be able to manage it themselves. Personal projects may use a managed hosting I control, but still prefer zero-maintenance options.
 - Do not send medical data to third-party APIs, only well-anonymized. If a task touches personal or medical data, remind me of the legal risks.
 
 ## Working with code
