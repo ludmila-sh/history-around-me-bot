@@ -10,7 +10,7 @@ It is designed primarily for my own trips, not as a commercial product yet: prio
 
 Python 3.12, python-telegram-bot (async), pydantic-settings, LLM via OpenRouter (OpenAI SDK). Dependencies in `requirements*.txt` with pinned versions, tool settings in `pyproject.toml` (ruff).
 
-This is an existing project: its current structure and conventions win over the generic scaffold. Do not migrate `src/` to `app/` or introduce scaffold tools (mypy, pre-commit) unless I ask.
+This is an existing project: its current structure and conventions win over the generic scaffold. Do not migrate `src/` to `app/` or introduce scaffold tools (mypy) unless I ask.
 
 ## Structure
 
@@ -24,7 +24,8 @@ This is an existing project: its current structure and conventions win over the 
 ## Commands
 
 - Check everything: `ruff check . && ruff format --check . && pytest`
-- Run the bot locally: `python -m src.run_bot`
+- Run the bot locally: `python -m src.run_bot` (or `py-run-bot.cmd`)
+- Hooks: `pre-commit install` (ruff, gitleaks)
 
 ## Environments
 
@@ -35,7 +36,7 @@ This is an existing project: its current structure and conventions win over the 
 ## Conventions
 
 - Settings only through `src/config/config.py` (`app_settings`); no `os.environ` anywhere else.
-- Logs via `getLogger(__name__)`, no `print`. Do not log user coordinates or message text.
+- Logs via `get_logger(__name__)` from `src/config/logging_config.py`, no `print`. Do not log user coordinates or message text.
 - Interface is the Telegram bot. Handlers stay thin; business logic lives in separate modules, not in handlers.
 
 ## Database (if the project has one)
