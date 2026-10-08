@@ -1,0 +1,36 @@
+{
+  "query": {
+    "pages": {
+      "11": {
+        "pageid": 11,
+        "title": "Kızıl Kule",
+        "coordinates": [
+          {
+            "lat": 36.534,
+            "lon": 32.001
+          }
+        ],
+        "extract": "Kızıl Kule is a tower in Alanya.",
+        "fullurl": "https://example.org/wiki/Kızıl Kule",
+        "pageprops": {
+          "wikibase_item": "Q1001"
+        }
+      },
+      "12": {
+        "pageid": 12,
+        "title": "Old Mosque",
+        "coordinates": [
+          {
+            "lat": 36.533,
+            "lon": 31.999
+          }
+        ],
+        "extract": "The Old Mosque is a mosque in Alanya.",
+        "fullurl": "https://en.example.org/Old_Mosque",
+        "pageprops": {
+          "wikibase_item": "Q1002"
+        }
+      }
+    }
+  }
+}

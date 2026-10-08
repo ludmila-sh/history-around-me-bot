@@ -116,3 +116,59 @@ def parse_overpass(
             }
         )
     return sorted(places, key=lambda place: place["distance"])
+
+
+def parse_wikipedia(data: dict[str, Any], lang: str) -> list[dict[str, Any]]:
+    """Turn a geosearch-generator response (extracts, coordinates, pageprops) into pages."""
+    pages = []
+    for page in data.get("query", {}).get("pages", {}).values():
+        coordinates = page.get("coordinates")
+        if not coordinates:
+            continue
+        pages.append(
+            {
+                "lang": lang,
+                "title": page.get("title", ""),
+                "latitude": coordinates[0]["lat"],
+                "longitude": coordinates[0]["lon"],
+                "wikidata": page.get("pageprops", {}).get("wikibase_item", ""),
+                "extract": page.get("extract", "").strip(),
+                "url": page.get("fullurl", ""),
+            }
+        )
+    return pages
+
+
+def _normalize(name: str) -> str:
+    return "".join(char for char in name.casefold() if char.isalnum())
+
+
+def _is_same_place(place: dict[str, Any], page: dict[str, Any]) -> bool:
+    if place["wikidata"] and page["wikidata"]:
+        return place["wikidata"] == page["wikidata"]
+    if place["wikipedia"] == f"{page['lang']}:{page['title']}":
+        return True
+    if distance_m(place["latitude"], place["longitude"], page["latitude"], page["longitude"]) > 75:
+        return False
+    place_name, page_title = _normalize(place["name"]), _normalize(page["title"])
+    return bool(place_name and page_title) and (
+        place_name in page_title or page_title in place_name
+    )
+
+
+def merge_wikipedia(
+    places: list[dict[str, Any]], pages: list[dict[str, Any]]
+) -> list[dict[str, Any]]:
+    """Attach the first non-empty extract to each OSM place.
+
+    `pages` must be ordered by language priority (user language first). Articles that match
+    no OSM place are dropped: OSM tags decide whether something is worth showing.
+    """
+    for place in places:
+        for page in pages:
+            if page["extract"] and _is_same_place(place, page):
+                place["wikipedia_extract"] = page["extract"]
+                place["wikipedia_url"] = page["url"]
+                place["wikipedia_lang"] = page["lang"]
+                break
+    return places

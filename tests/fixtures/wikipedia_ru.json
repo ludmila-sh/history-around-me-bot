@@ -1,0 +1,51 @@
+{
+  "query": {
+    "pages": {
+      "1": {
+        "pageid": 1,
+        "title": "Красная башня",
+        "coordinates": [
+          {
+            "lat": 36.534,
+            "lon": 32.001
+          }
+        ],
+        "extract": "Красная башня — башня XIII века в Алании.",
+        "fullurl": "https://ru.example.org/Kizil",
+        "pageprops": {
+          "wikibase_item": "Q1001"
+        }
+      },
+      "2": {
+        "pageid": 2,
+        "title": "Эски-джами",
+        "coordinates": [
+          {
+            "lat": 36.533,
+            "lon": 31.999
+          }
+        ],
+        "extract": "",
+        "fullurl": "https://example.org/wiki/Эски-джами",
+        "pageprops": {
+          "wikibase_item": "Q1002"
+        }
+      },
+      "3": {
+        "pageid": 3,
+        "title": "Алания",
+        "coordinates": [
+          {
+            "lat": 36.532,
+            "lon": 32.0
+          }
+        ],
+        "extract": "Алания — город на побережье.",
+        "fullurl": "https://example.org/wiki/Алания",
+        "pageprops": {
+          "wikibase_item": "Q9999"
+        }
+      }
+    }
+  }
+}

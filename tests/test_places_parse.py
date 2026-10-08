@@ -3,7 +3,7 @@ from pathlib import Path
 
 import pytest
 
-from src.places_parse import categorize, parse_overpass
+from src.places_parse import categorize, merge_wikipedia, parse_overpass, parse_wikipedia
 
 FIXTURES = Path(__file__).parent / "fixtures"
 ORIGIN = (36.5320, 32.0000)
@@ -84,3 +84,58 @@ def test_overpass_place_fields_are_not_swapped():
 def test_overpass_places_sorted_by_distance():
     distances = [place["distance"] for place in _parse().values()]
     assert distances == sorted(distances)
+
+
+def _wikipedia(lang: str) -> list[dict]:
+    data = json.loads((FIXTURES / f"wikipedia_{lang}.json").read_text(encoding="utf-8"))
+    return parse_wikipedia(data, lang)
+
+
+def _merged(lang_order: tuple[str, ...] = ("ru", "en", "tr")) -> dict[str, dict]:
+    places = list(_parse(lang="en").values())
+    pages = [page for lang in lang_order for page in _wikipedia(lang)]
+    return {place["name"]: place for place in merge_wikipedia(places, pages)}
+
+
+def test_wikipedia_pages_keep_fields_apart():
+    tower = _wikipedia("ru")[0]
+    assert tower["wikidata"] == "Q1001"
+    assert tower["title"] == "Красная башня"
+    assert tower["url"] == "https://ru.example.org/Kizil"
+    assert (tower["latitude"], tower["longitude"]) == (36.5340, 32.0010)
+
+
+def test_merge_matches_by_wikidata_and_prefers_first_language():
+    tower = _merged()["Kızıl Kule"]
+    assert tower["wikipedia_lang"] == "ru"
+    assert tower["wikipedia_extract"].startswith("Красная башня")
+
+
+def test_merge_falls_back_to_next_language_when_extract_is_empty():
+    mosque = _merged()["Eski Cami"]
+    assert mosque["wikipedia_lang"] == "en"
+    assert mosque["wikipedia_url"] == "https://en.example.org/Old_Mosque"
+
+
+def test_merge_matches_by_proximity_and_name_when_osm_has_no_wiki_tags():
+    park = _merged()["Atatürk Parkı"]
+    assert park["wikipedia_lang"] == "tr"
+
+
+def test_merge_does_not_attach_unrelated_article_at_same_spot():
+    # The "Алания" town article sits at the search point but matches no OSM place.
+    merged = _merged()
+    assert all("город" not in p.get("wikipedia_extract", "") for p in merged.values())
+    assert "wikipedia_extract" not in merged["Museum Cafe"]
+
+
+def test_merge_never_matches_places_with_different_wikidata():
+    place = {
+        "name": "Kızıl Kule",
+        "wikidata": "Q1",
+        "wikipedia": "",
+        "latitude": 36.5340,
+        "longitude": 32.0010,
+    }
+    (merged,) = merge_wikipedia([place], _wikipedia("en"))
+    assert "wikipedia_extract" not in merged
