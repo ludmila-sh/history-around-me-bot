@@ -118,6 +118,27 @@ def parse_overpass(
     return sorted(places, key=lambda place: place["distance"])
 
 
+def remove_duplicates(places: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Drop the same object mapped twice (e.g. as a node and a way): same name within 75 m.
+
+    `places` must be sorted by distance, so the nearest copy is kept.
+    """
+    unique: list[dict[str, Any]] = []
+    for place in places:
+        name = _normalize(place["name"])
+        is_copy = any(
+            _normalize(kept["name"]) == name
+            and distance_m(
+                place["latitude"], place["longitude"], kept["latitude"], kept["longitude"]
+            )
+            < 75
+            for kept in unique
+        )
+        if not is_copy:
+            unique.append(place)
+    return unique
+
+
 def parse_wikipedia(data: dict[str, Any], lang: str) -> list[dict[str, Any]]:
     """Turn a geosearch-generator response (extracts, coordinates, pageprops) into pages."""
     pages = []

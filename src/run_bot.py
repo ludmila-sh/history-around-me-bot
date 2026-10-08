@@ -26,7 +26,7 @@ from telegram.ext import (
 
 from src.config.config import app_settings
 from src.config.logging_config import get_logger, setup_logging
-from src.places_api import describe_error, get_nearby_places
+from src.places_api import USER_AGENT, PlacesUnavailable, describe_error, get_nearby_places
 from src.utils import generate_answer
 
 logger = get_logger(__name__)
@@ -86,21 +86,32 @@ async def location(update: Update, context: CallbackContext) -> None:
 
     await context.bot.send_chat_action(chat_id=update.effective_chat.id, action="typing")
 
-    location_name = _get_location_name(lat, lon)
     user_lang = _detect_user_language(update)
     logger.info(f"Detected user language: {user_lang}")
 
-    await context.bot.send_chat_action(chat_id=update.effective_chat.id, action="typing")
-
-    categorized_places = get_nearby_places(lat, lon, radius=10000, lang=user_lang)
+    try:
+        location_name, nearby = await asyncio.gather(
+            asyncio.to_thread(_get_location_name, lat, lon),
+            get_nearby_places(lat, lon, lang=user_lang),
+        )
+    except PlacesUnavailable:
+        logger.warning("Place search unavailable")
+        await update.message.reply_text(
+            "⚠️ Сервис карт сейчас не отвечает, попробуйте через минуту."
+            if user_lang == "ru"
+            else "⚠️ The map service isn't responding right now, please try again in a minute."
+        )
+        return
+    categorized_places = nearby.by_category
     logger.info(
         f"Found categorized places: {[(cat, len(p)) for cat, p in categorized_places.items()]}"
     )
 
     if not categorized_places:
         await update.message.reply_text(
-            "🔍 Unfortunately, I couldn't find any notable landmarks or cultural sites nearby. "
-            "Try moving to a different location or check back later!"
+            "🔍 Рядом (в радиусе 1.5 км) не нашлось ничего интересного. Попробуйте другое место."
+            if user_lang == "ru"
+            else "🔍 Nothing interesting within 1.5 km. Try another spot."
         )
         return
 
@@ -111,8 +122,17 @@ async def location(update: Update, context: CallbackContext) -> None:
     }
 
     overview_response = generate_category_overview(categorized_places, location_name, user_lang)
+    overview_text = overview_response["text"]
+    if nearby.expanded:
+        km = f"{nearby.radius / 1000:g}"
+        note = (
+            f"В радиусе 500 м почти ничего нет, поэтому ищу в радиусе {km} км."
+            if user_lang == "ru"
+            else f"Little within 500 m, so I searched within {km} km."
+        )
+        overview_text = f"<i>{note}</i>\n\n{overview_text}"
     await update.message.reply_text(
-        overview_response["text"],
+        overview_text,
         reply_markup=overview_response["keyboard"],
         parse_mode=ParseMode.HTML,
     )
@@ -529,7 +549,7 @@ def _get_location_name(lat: float, lon: float) -> str:
             "https://nominatim.openstreetmap.org/reverse",
             params={"lat": lat, "lon": lon, "format": "json", "addressdetails": 1},
             timeout=8,
-            headers={"User-Agent": "HistoryAroundMeBot/1.0"},
+            headers={"User-Agent": USER_AGENT},
         )
         response.raise_for_status()
         address = response.json().get("address", {})

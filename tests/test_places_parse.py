@@ -3,7 +3,13 @@ from pathlib import Path
 
 import pytest
 
-from src.places_parse import categorize, merge_wikipedia, parse_overpass, parse_wikipedia
+from src.places_parse import (
+    categorize,
+    merge_wikipedia,
+    parse_overpass,
+    parse_wikipedia,
+    remove_duplicates,
+)
 
 FIXTURES = Path(__file__).parent / "fixtures"
 ORIGIN = (36.5320, 32.0000)
@@ -139,3 +145,14 @@ def test_merge_never_matches_places_with_different_wikidata():
     }
     (merged,) = merge_wikipedia([place], _wikipedia("en"))
     assert "wikipedia_extract" not in merged
+
+
+def test_duplicates_of_same_object_are_merged_but_different_places_kept():
+    near = {"name": "Kızıl Kule", "latitude": 36.5340, "longitude": 32.0010}
+    same_object = {"name": "kızıl kule", "latitude": 36.5341, "longitude": 32.0011}
+    same_name_far = {"name": "Kızıl Kule", "latitude": 36.5400, "longitude": 32.0100}
+    other = {"name": "Eski Cami", "latitude": 36.5340, "longitude": 32.0010}
+
+    result = remove_duplicates([near, same_object, same_name_far, other])
+
+    assert result == [near, same_name_far, other]
