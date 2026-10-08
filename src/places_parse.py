@@ -1,0 +1,118 @@
+"""Pure parsing of OSM responses into place dicts: no network, no I/O."""
+
+import math
+from typing import Any
+
+HISTORY = "history_culture"
+FOOD = "food_drinks"
+SHOPPING = "shopping"
+NATURE = "parks_nature"
+
+HISTORY_TOURISM = {"attraction", "museum", "gallery", "viewpoint", "artwork"}
+HISTORY_AMENITY = {"theatre", "arts_centre"}
+FOOD_AMENITY = {"restaurant", "cafe", "bar", "pub", "fast_food", "ice_cream"}
+SHOPPING_SHOP = {
+    "books",
+    "art",
+    "antiques",
+    "gift",
+    "souvenir",
+    "craft",
+    "jewelry",
+    "carpet",
+    "ceramics",
+    "tea",
+    "spices",
+    "confectionery",
+}
+NATURE_LEISURE = {"park", "garden", "nature_reserve"}
+NATURE_NATURAL = {"beach", "peak", "cave_entrance", "waterfall"}
+
+# Tags that make a mosque or church a landmark; ordinary neighbourhood ones are skipped.
+NOTABLE_WORSHIP_TAGS = ("wikidata", "wikipedia", "heritage", "historic")
+
+DISPLAY_KEYS = ("historic", "tourism", "amenity", "leisure", "natural", "shop")
+
+
+def categorize(tags: dict[str, str]) -> str | None:
+    """Return the bot category for OSM tags, or None if the place is not worth showing.
+
+    Only tags decide: a name like "Museum Cafe" never turns a cafe into a landmark.
+    """
+    amenity = tags.get("amenity")
+    if tags.get("historic") or tags.get("tourism") in HISTORY_TOURISM or amenity in HISTORY_AMENITY:
+        return HISTORY
+    if amenity == "place_of_worship":
+        return HISTORY if any(tags.get(key) for key in NOTABLE_WORSHIP_TAGS) else None
+    if tags.get("leisure") in NATURE_LEISURE or tags.get("natural") in NATURE_NATURAL:
+        return NATURE
+    if amenity in FOOD_AMENITY:
+        return FOOD
+    if tags.get("shop") in SHOPPING_SHOP or amenity == "marketplace":
+        return SHOPPING
+    return None
+
+
+def best_name(tags: dict[str, str], lang: str) -> str:
+    """Name in the user's language, then the local name, then English."""
+    for key in (f"name:{lang}", "name", "name:en"):
+        if tags.get(key):
+            return tags[key]
+    return ""
+
+
+def distance_m(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
+    """Haversine distance in meters."""
+    earth_radius = 6371000
+    phi1, phi2 = math.radians(lat1), math.radians(lat2)
+    d_phi = math.radians(lat2 - lat1)
+    d_lambda = math.radians(lon2 - lon1)
+    a = math.sin(d_phi / 2) ** 2 + math.cos(phi1) * math.cos(phi2) * math.sin(d_lambda / 2) ** 2
+    return earth_radius * 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
+
+
+def _display_category(tags: dict[str, str]) -> str:
+    for key in DISPLAY_KEYS:
+        if tags.get(key):
+            return f"{key.title()}: {tags[key].replace('_', ' ').title()}"
+    return ""
+
+
+def _format_address(tags: dict[str, str]) -> str:
+    keys = ("addr:street", "addr:housenumber", "addr:city")
+    return ", ".join(tags[key] for key in keys if tags.get(key))
+
+
+def parse_overpass(
+    data: dict[str, Any], lat: float, lon: float, radius: int, lang: str
+) -> list[dict[str, Any]]:
+    """Turn an Overpass JSON response into categorized places within `radius` of the point."""
+    places = []
+    for element in data.get("elements", []):
+        point = element if element.get("type") == "node" else element.get("center")
+        if not point:
+            continue
+        tags = element.get("tags", {})
+        category_key = categorize(tags)
+        name = best_name(tags, lang)
+        if not category_key or not name:
+            continue
+        distance = distance_m(lat, lon, point["lat"], point["lon"])
+        if distance > radius:
+            continue
+        places.append(
+            {
+                "name": name,
+                "category_key": category_key,
+                "category": _display_category(tags),
+                "description": tags.get("description", ""),
+                "address": _format_address(tags),
+                "latitude": point["lat"],
+                "longitude": point["lon"],
+                "distance": distance,
+                "source": "openstreetmap",
+                "wikipedia": tags.get("wikipedia", ""),
+                "wikidata": tags.get("wikidata", ""),
+            }
+        )
+    return sorted(places, key=lambda place: place["distance"])
