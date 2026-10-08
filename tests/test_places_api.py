@@ -144,8 +144,11 @@ def test_wikipedia_language_codes_from_osm_are_validated_before_use_in_host():
     assert places_api._wikipedia_languages("en", places) == ["en", "tr"]
 
 
-def test_overpass_query_uses_wide_radius_and_all_tag_keys():
-    query = places_api._overpass_query(36.5, 32.0)
-    assert f"around:{places_api.WIDE_RADIUS},36.5,32.0" in query
+def test_overpass_query_covers_all_tag_keys_within_requested_radius():
+    query = places_api._overpass_query(36.5, 32.0, 500)
+    assert "around:500,36.5,32.0" in query
     for key in ("historic", "tourism", "amenity", "leisure", "natural", "shop"):
-        assert f'nwr["{key}"' in query
+        assert f'["{key}"' in query
+    # dense categories skip relations on purpose, rarer ones keep them
+    assert 'nwr["shop"' not in query and 'node["shop"' in query
+    assert 'nwr["historic"' in query

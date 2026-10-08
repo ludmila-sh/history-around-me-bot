@@ -18,7 +18,7 @@ HEADERS = {"User-Agent": USER_AGENT}
 
 OVERPASS_URLS = (
     "https://overpass-api.de/api/interpreter",
-    "https://overpass.kumi.systems/api/interpreter",
+    "https://z.overpass-api.de/api/interpreter",
 )
 WIKIPEDIA_API = "https://{lang}.wikipedia.org/w/api.php"
 
@@ -59,18 +59,17 @@ async def get_nearby_places(lat: float, lon: float, lang: str = "en") -> NearbyP
     """
     try:
         async with asyncio.timeout(TOTAL_TIMEOUT):
-            osm_data = await asyncio.to_thread(_fetch_overpass, _overpass_query(lat, lon))
-            places = parse.parse_overpass(osm_data, lat, lon, WIDE_RADIUS, lang)
-            places = parse.remove_duplicates(places)
+            radius = NEAR_RADIUS
+            places = await _search_osm(lat, lon, radius, lang)
+            expanded = len(places) < MIN_PLACES
+            if expanded:
+                radius = WIDE_RADIUS
+                places = await _search_osm(lat, lon, radius, lang)
             pages = await _fetch_wikipedia_pages(lat, lon, lang, places)
     except TimeoutError as e:
         raise PlacesUnavailable("search timed out") from e
 
-    places = parse.merge_wikipedia(places, pages)
-    nearby = [place for place in places if place["distance"] <= NEAR_RADIUS]
-    expanded = len(nearby) < MIN_PLACES
-    radius = WIDE_RADIUS if expanded else NEAR_RADIUS
-    chosen = places if expanded else nearby
+    chosen = parse.merge_wikipedia(places, pages)
 
     by_category: dict[str, list[dict[str, Any]]] = {}
     for place in chosen:
@@ -81,26 +80,39 @@ async def get_nearby_places(lat: float, lon: float, lang: str = "en") -> NearbyP
     return NearbyPlaces(by_category=by_category, radius=radius, expanded=expanded)
 
 
+async def _search_osm(lat: float, lon: float, radius: int, lang: str) -> list[dict[str, Any]]:
+    data = await asyncio.to_thread(_fetch_overpass, _overpass_query(lat, lon, radius))
+    places = parse.parse_overpass(data, lat, lon, radius, lang)
+    return parse.remove_duplicates(places)
+
+
 def _regex(values: set[str]) -> str:
     return "^(" + "|".join(sorted(values)) + ")$"
 
 
-def _overpass_query(lat: float, lon: float) -> str:
-    around = f"(around:{WIDE_RADIUS},{lat},{lon})"
+def _overpass_query(lat: float, lon: float, radius: int) -> str:
+    around = f"(around:{radius},{lat},{lon})"
+
+    def select(kinds: str, tag_filter: str) -> str:
+        return "".join(f"{kind}{tag_filter}{around};" for kind in kinds.split())
+
+    # Cafes and shops are the bulk of the data in a city centre: skipping relations for them
+    # keeps the query within the public server's time and rate limits.
     worship = "".join(
-        f'nwr["amenity"="place_of_worship"]["{key}"]{around};' for key in parse.NOTABLE_WORSHIP_TAGS
+        select("nwr", f'["amenity"="place_of_worship"]["{key}"]')
+        for key in parse.NOTABLE_WORSHIP_TAGS
     )
-    amenities = parse.HISTORY_AMENITY | parse.FOOD_AMENITY | {"marketplace"}
     return (
         "[out:json][timeout:10];("
-        f'nwr["historic"]{around};'
-        f'nwr["tourism"~"{_regex(parse.HISTORY_TOURISM)}"]{around};'
-        f'nwr["amenity"~"{_regex(amenities)}"]{around};'
-        f"{worship}"
-        f'nwr["leisure"~"{_regex(parse.NATURE_LEISURE)}"]{around};'
-        f'nwr["natural"~"{_regex(parse.NATURE_NATURAL)}"]{around};'
-        f'nwr["shop"~"{_regex(parse.SHOPPING_SHOP)}"]{around};'
-        ");out center tags;"
+        + select("nwr", '["historic"]')
+        + select("nwr", f'["tourism"~"{_regex(parse.HISTORY_TOURISM)}"]')
+        + select("nwr", f'["amenity"~"{_regex(parse.HISTORY_AMENITY)}"]')
+        + worship
+        + select("nwr", f'["leisure"~"{_regex(parse.NATURE_LEISURE)}"]')
+        + select("nwr", f'["natural"~"{_regex(parse.NATURE_NATURAL)}"]')
+        + select("node way", f'["amenity"~"{_regex(parse.FOOD_AMENITY | {"marketplace"})}"]')
+        + select("node way", f'["shop"~"{_regex(parse.SHOPPING_SHOP)}"]')
+        + ");out center tags;"
     )
 
 
