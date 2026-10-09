@@ -2,8 +2,12 @@
   "permissions": {
     "deny": [
       "Read(.env)",
-      "Read(.env.*)",
-      "Read(!.env.example)",
+      "Read(.env.local)",
+      "Read(.env.development)",
+      "Read(.env.production)",
+      "Read(.env.staging)",
+      "Read(.env.test)",
+      "Read(.env.*.local)",
       "Read(credentials/**)",
       "Read(secrets/**)",
       "Read(*.pem)",
