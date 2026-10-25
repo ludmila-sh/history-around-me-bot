@@ -1,13 +1,13 @@
 import asyncio
 import re
+from collections import OrderedDict
 from html import escape
 from typing import Any
 
 import requests
 from telegram import (
     BotCommand,
-    InlineKeyboardButton,
-    InlineKeyboardMarkup,
+    CallbackQuery,
     KeyboardButton,
     ReplyKeyboardMarkup,
     Update,
@@ -24,42 +24,43 @@ from telegram.ext import (
     filters,
 )
 
+from src import bot_ui
 from src.config.config import app_settings
 from src.config.logging_config import get_logger, setup_logging
-from src.places_api import USER_AGENT, PlacesUnavailable, describe_error, get_nearby_places
+from src.places_api import (
+    NEAR_RADIUS,
+    USER_AGENT,
+    PlacesUnavailable,
+    describe_error,
+    get_nearby_food,
+    get_nearby_places,
+)
 from src.utils import generate_answer
 
 logger = get_logger(__name__)
 
-# Store user context for callback handling
-user_contexts: dict[int, dict[str, Any]] = {}
+# Per-user state for button callbacks, in memory only. The least recently used users are
+# dropped so the process does not grow without bound.
+MAX_USERS = 200
+user_contexts: OrderedDict[int, dict[str, Any]] = OrderedDict()
 
-CATEGORY_INFO = {
-    "history_culture": {"emoji": "🏛️", "name": "History & Culture", "name_ru": "История и культура"},
-    "food_drinks": {"emoji": "🍽️", "name": "Food & Drinks", "name_ru": "Еда и напитки"},
-    "shopping": {"emoji": "🛍️", "name": "Shopping", "name_ru": "Покупки"},
-    "parks_nature": {"emoji": "🌳", "name": "Parks & Nature", "name_ru": "Парки и природа"},
-    "entertainment": {"emoji": "🎭", "name": "Entertainment", "name_ru": "Развлечения"},
-    "other": {"emoji": "📍", "name": "Other Places", "name_ru": "Другие места"},
-}
+
+def _remember(user_id: int, user_context: dict[str, Any]) -> None:
+    user_contexts[user_id] = user_context
+    user_contexts.move_to_end(user_id)
+    while len(user_contexts) > MAX_USERS:
+        user_contexts.popitem(last=False)
 
 
 async def send_welcome(update: Update, context: CallbackContext):
     logger.info("Starting a conversation...")
-    greeting_text = (
-        "🏛️ <b>Welcome to the History Around Me Bot!</b> 🌍\n\n"
-        "I'm your AI-powered travel guide! Send your location to discover "
-        "fascinating historical and cultural landmarks nearby.\n\n"
-        "📍 Click the button below to share your current location.\n\n"
-        "<i>Descriptions are AI-generated and may contain mistakes, "
-        "so double-check opening hours and prices.</i>"
-    )
-
-    button = KeyboardButton("📍 Send Location", request_location=True)
+    lang = _detect_user_language(update)
+    label = "📍 Отправить геолокацию" if lang == "ru" else "📍 Send Location"
+    button = KeyboardButton(label, request_location=True)
     reply_markup = ReplyKeyboardMarkup([[button]], one_time_keyboard=True, resize_keyboard=True)
 
     await update.message.reply_text(
-        greeting_text, reply_markup=reply_markup, parse_mode=ParseMode.HTML
+        bot_ui.welcome(lang), reply_markup=reply_markup, parse_mode=ParseMode.HTML
     )
 
 
@@ -73,7 +74,7 @@ async def health_check(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 async def location(update: Update, context: CallbackContext) -> None:
-    """Handle location messages from users."""
+    """Handle a shared location: search sights and show the category overview."""
     user_location = update.message.location
     lat = user_location.latitude
     lon = user_location.longitude
@@ -87,8 +88,6 @@ async def location(update: Update, context: CallbackContext) -> None:
     await context.bot.send_chat_action(chat_id=update.effective_chat.id, action="typing")
 
     user_lang = _detect_user_language(update)
-    logger.info(f"Detected user language: {user_lang}")
-
     try:
         location_name, nearby = await asyncio.gather(
             asyncio.to_thread(_get_location_name, lat, lon),
@@ -96,45 +95,34 @@ async def location(update: Update, context: CallbackContext) -> None:
         )
     except PlacesUnavailable:
         logger.warning("Place search unavailable")
-        await update.message.reply_text(
-            "⚠️ Сервис карт сейчас не отвечает, попробуйте через минуту."
-            if user_lang == "ru"
-            else "⚠️ The map service isn't responding right now, please try again in a minute."
-        )
+        await update.message.reply_text(bot_ui.text("places_unavailable", user_lang))
         return
-    categorized_places = nearby.by_category
-    logger.info(
-        f"Found categorized places: {[(cat, len(p)) for cat, p in categorized_places.items()]}"
+    logger.info(f"Found places: {[(cat, len(p)) for cat, p in nearby.by_category.items()]}")
+
+    # The context is kept even when no sights were found: the food button still needs it.
+    _remember(
+        user_id,
+        {
+            "lat": lat,
+            "lon": lon,
+            "location": location_name,
+            "nearby": nearby,
+            "language": user_lang,
+        },
     )
+    text, keyboard = _overview(user_contexts[user_id])
+    await update.message.reply_text(text, reply_markup=keyboard, parse_mode=ParseMode.HTML)
 
-    if not categorized_places:
-        await update.message.reply_text(
-            "🔍 Рядом (в радиусе 1.5 км) не нашлось ничего интересного. Попробуйте другое место."
-            if user_lang == "ru"
-            else "🔍 Nothing interesting within 1.5 km. Try another spot."
-        )
-        return
 
-    user_contexts[user_id] = {
-        "location": location_name,
-        "categorized_places": categorized_places,
-        "language": user_lang,
-    }
-
-    overview_response = generate_category_overview(categorized_places, location_name, user_lang)
-    overview_text = overview_response["text"]
-    if nearby.expanded:
-        km = f"{nearby.radius / 1000:g}"
-        note = (
-            f"В радиусе 500 м почти ничего нет, поэтому ищу в радиусе {km} км."
-            if user_lang == "ru"
-            else f"Little within 500 m, so I searched within {km} km."
-        )
-        overview_text = f"<i>{note}</i>\n\n{overview_text}"
-    await update.message.reply_text(
-        overview_text,
-        reply_markup=overview_response["keyboard"],
-        parse_mode=ParseMode.HTML,
+def _overview(user_context: dict[str, Any]) -> bot_ui.Screen:
+    nearby = user_context["nearby"]
+    return bot_ui.overview(
+        nearby.by_category,
+        user_context["location"],
+        user_context["language"],
+        nearby.radius,
+        nearby.expanded,
+        NEAR_RADIUS,
     )
 
 
@@ -152,382 +140,62 @@ def _detect_user_language(update: Update) -> str:
     return "en"
 
 
-def _category_name(category: str, lang: str) -> str:
-    info = CATEGORY_INFO[category]
-    return info["name_ru"] if lang == "ru" else info["name"]
+async def _show(query: CallbackQuery, screen: bot_ui.Screen) -> None:
+    text, keyboard = screen
+    await query.edit_message_text(text, reply_markup=keyboard, parse_mode=ParseMode.HTML)
 
 
-def generate_category_overview(
-    categorized_places: dict[str, list[dict[str, Any]]], location_name: str, lang: str = "en"
-) -> dict[str, Any]:
-    """Generate category-based overview with interactive buttons."""
-    if lang == "ru":
-        overview_text = f"📍 <b>{escape(location_name)}</b>\n\n🎯 <b>Что вас интересует?</b>\n\n"
-        distance_text = "<i>Или выберите расстояние:</i>"
-    else:
-        overview_text = (
-            f"📍 <b>{escape(location_name)}</b>\n\n🎯 <b>What are you looking for?</b>\n\n"
-        )
-        distance_text = "<i>Or choose distance:</i>"
-
-    available = [c for c, places in categorized_places.items() if c in CATEGORY_INFO and places]
-
-    lines = [
-        f"{CATEGORY_INFO[c]['emoji']} {_category_name(c, lang)} ({len(categorized_places[c])})"
-        for c in available
-    ]
-    overview_text += "\n".join(lines) + f"\n\n{distance_text}"
-
-    category_buttons = [
-        InlineKeyboardButton(
-            f"{CATEGORY_INFO[c]['emoji']} {_category_name(c, lang)}", callback_data=f"category_{c}"
-        )
-        for c in available
-    ]
-    keyboard = [category_buttons[i : i + 2] for i in range(0, len(category_buttons), 2)]
-
-    unit = "м" if lang == "ru" else "m"
-    keyboard.append(
-        [
-            InlineKeyboardButton(f"👀 100{unit}", callback_data="distance_100"),
-            InlineKeyboardButton(f"🚶 500{unit}", callback_data="distance_500"),
-            InlineKeyboardButton(
-                "🚗 1км+" if lang == "ru" else "🚗 1km+", callback_data="distance_1000"
-            ),
-        ]
-    )
-    all_label = "📍 Всё поблизости" if lang == "ru" else "📍 Everything Nearby"
-    keyboard.append([InlineKeyboardButton(all_label, callback_data="category_all")])
-
-    return {"text": overview_text, "keyboard": InlineKeyboardMarkup(keyboard)}
-
-
-def _places_keyboard(places: list[dict[str, Any]], lang: str) -> InlineKeyboardMarkup:
-    keyboard = []
-    for i, place in enumerate(places[:5]):
-        name = place["name"]
-        button_text = f"📖 {name[:25]}..." if len(name) > 25 else f"📖 {name}"
-        keyboard.append([InlineKeyboardButton(button_text, callback_data=f"place_details_{i}")])
-    back_label = "⬅️ Назад к категориям" if lang == "ru" else "⬅️ Back to Categories"
-    keyboard.append([InlineKeyboardButton(back_label, callback_data="back_categories")])
-    return InlineKeyboardMarkup(keyboard)
-
-
-def _place_line(place: dict[str, Any], emoji: str, max_desc: int) -> str:
-    line = f"{emoji} <b>{escape(place['name'])}</b> ({int(place.get('distance', 0))}m)\n"
-    desc = place.get("description", "")
-    if desc:
-        if len(desc) > max_desc:
-            desc = desc[: max_desc - 3] + "..."
-        line += f"<i>{escape(desc)}</i>\n"
-    return line + "\n"
-
-
-def generate_category_places_response(
-    places: list[dict[str, Any]], category: str, lang: str = "en"
-) -> dict[str, Any]:
-    """Generate response for specific category places."""
-    if category in CATEGORY_INFO:
-        emoji, name = CATEGORY_INFO[category]["emoji"], _category_name(category, lang)
-    else:
-        emoji, name = "📍", ("Все места" if lang == "ru" else "All Places")
-
-    response_text = f"{emoji} <b>{escape(name)}</b>\n\n"
-    response_text += "".join(_place_line(place, "⭐", 60) for place in places[:5])
-
-    return {"text": response_text, "keyboard": _places_keyboard(places, lang)}
-
-
-def generate_distance_places_response(
-    places: list[dict[str, Any]], distance: int, lang: str = "en"
-) -> dict[str, Any]:
-    """Generate response for distance-filtered places."""
-    headers = {
-        "ru": {
-            100: f"👀 <b>В радиусе {distance}м</b> (что видно прямо сейчас)",
-            500: f"🚶 <b>В радиусе {distance}м</b> (5 минут пешком)",
-        },
-        "en": {
-            100: f"👀 <b>Within {distance}m</b> (what you can see right now)",
-            500: f"🚶 <b>Within {distance}m</b> (5-minute walk)",
-        },
-    }
-    default = (
-        f"🚗 <b>В радиусе {distance}м+</b> (стоит дойти)"
-        if lang == "ru"
-        else f"🚗 <b>Within {distance}m+</b> (worth the trip)"
-    )
-    response_text = headers.get(lang, headers["en"]).get(distance, default) + "\n\n"
-
-    for place in places[:7]:
-        category = place.get("category", "").lower()
-        if "historic" in category or "museum" in category or "culture" in category:
-            emoji = "🏛️"
-        elif "food" in category or "restaurant" in category or "cafe" in category:
-            emoji = "🍽️"
-        elif "park" in category or "garden" in category:
-            emoji = "🌳"
-        else:
-            emoji = "📍"
-        response_text += _place_line(place, emoji, 50)
-
-    return {"text": response_text, "keyboard": _places_keyboard(places, lang)}
+def _to_int(value: str) -> int | None:
+    return int(value) if value.isdecimal() else None
 
 
 async def handle_callback_query(update: Update, context: CallbackContext):
-    """Handle inline button callbacks."""
+    """Route inline button presses; the screens themselves are built in bot_ui."""
     query = update.callback_query
-    user_id = query.from_user.id
-    data = query.data
-
     await query.answer()
-
-    if user_id not in user_contexts:
-        await query.edit_message_text("❌ Session expired. Please send your location again.")
+    if query.data == "noop":
         return
 
-    user_context = user_contexts[user_id]
-    categorized_places = user_context.get("categorized_places", {})
+    user_context = user_contexts.get(query.from_user.id)
+    if user_context is None:
+        await query.edit_message_text(bot_ui.text("expired", _detect_user_language(update)))
+        return
+    user_contexts.move_to_end(query.from_user.id)
     lang = user_context["language"]
+    by_category = user_context["nearby"].by_category
 
-    if data.startswith("category_"):
+    action, _, rest = query.data.partition(":")
+    scope, _, number = rest.rpartition(":")
+    number = _to_int(number)
+    valid_scope = scope == bot_ui.ALL or scope in bot_ui.SIGHT_CATEGORIES
+
+    if action == "cat" and valid_scope and number is not None:
+        places = bot_ui.sights_in_scope(by_category, scope)
+        await _show(query, bot_ui.place_list(scope, places, number, lang))
+    elif action == "pl" and valid_scope and number is not None:
+        places = bot_ui.sights_in_scope(by_category, scope)
+        if number < len(places):
+            card = bot_ui.place_card(places[number], scope, number, lang, user_context["location"])
+            await _show(query, card)
+    elif query.data == "food":
         await context.bot.send_chat_action(chat_id=update.effective_chat.id, action="typing")
-        category = data.removeprefix("category_")
-
-        if category == "all":
-            all_places = [p for cat_places in categorized_places.values() for p in cat_places]
-            places_to_show = sorted(all_places, key=lambda x: x["distance"])[:7]
-        else:
-            places_to_show = categorized_places.get(category, [])[:5]
-
-        if places_to_show:
-            user_context["current_places"] = places_to_show
-            response = generate_category_places_response(places_to_show, category, lang)
-            await query.edit_message_text(
-                response["text"], reply_markup=response["keyboard"], parse_mode=ParseMode.HTML
-            )
-        elif lang == "ru":
-            await query.edit_message_text("❌ В этой категории ничего не найдено.")
-        else:
-            await query.edit_message_text("❌ No places found in this category.")
-
-    elif data.startswith("distance_"):
-        await context.bot.send_chat_action(chat_id=update.effective_chat.id, action="typing")
-        distance = int(data.removeprefix("distance_"))
-
-        all_places = [
-            p
-            for cat_places in categorized_places.values()
-            for p in cat_places
-            if p.get("distance", 0) <= distance
-        ]
-        places_to_show = sorted(all_places, key=lambda x: x["distance"])[:7]
-
-        if places_to_show:
-            user_context["current_places"] = places_to_show
-            response = generate_distance_places_response(places_to_show, distance, lang)
-            await query.edit_message_text(
-                response["text"], reply_markup=response["keyboard"], parse_mode=ParseMode.HTML
-            )
-        elif lang == "ru":
-            await query.edit_message_text(f"❌ В радиусе {distance}м ничего не найдено.")
-        else:
-            await query.edit_message_text(f"❌ No places found within {distance}m.")
-
-    elif data == "back_categories":
-        overview_response = generate_category_overview(
-            categorized_places, user_context["location"], lang
-        )
-        await query.edit_message_text(
-            overview_response["text"],
-            reply_markup=overview_response["keyboard"],
-            parse_mode=ParseMode.HTML,
-        )
-
-    elif data.startswith("place_details_"):
-        await context.bot.send_chat_action(chat_id=update.effective_chat.id, action="typing")
-        place_index = int(data.removeprefix("place_details_"))
-        current_places = user_context.get("current_places", [])
-
-        if place_index < len(current_places):
-            place = current_places[place_index]
-            detailed_info = generate_detailed_place_info(place, lang)
-            keyboard = [[InlineKeyboardButton("⬅️ Back", callback_data="back_categories")]]
-            await query.edit_message_text(
-                detailed_info,
-                reply_markup=InlineKeyboardMarkup(keyboard),
-                parse_mode=ParseMode.HTML,
-            )
-
-
-def generate_detailed_place_info(place, lang="en"):
-    """Generate detailed AI-powered information about a specific place based on its category."""
-    name = place.get("name", "").lower()
-    description = place.get("description", "").lower()
-    category = place.get("category", "")
-    place_type = place.get("tourism") or place.get("historic") or place.get("amenity", "")
-
-    food_keywords = ["restaurant", "cafe", "bar", "pub", "bistro", "pizzeria", "bakery", "food"]
-    nature_keywords = ["park", "garden", "forest", "lake", "river", "beach", "nature"]
-    shopping_keywords = ["shop", "store", "market", "mall", "boutique", "souvenir"]
-    entertainment_keywords = ["cinema", "theater", "club", "disco", "entertainment", "sports"]
-
-    all_text = f"{name} {description} {category} {place_type}".lower()
-
-    if any(keyword in all_text for keyword in food_keywords):
-        place_type = "restaurant"
-    elif any(keyword in all_text for keyword in nature_keywords):
-        place_type = "nature"
-    elif any(keyword in all_text for keyword in shopping_keywords):
-        place_type = "shopping"
-    elif any(keyword in all_text for keyword in entertainment_keywords):
-        place_type = "entertainment"
+        await _show(query, await _food_screen(user_context))
+    elif query.data == "back":
+        await _show(query, _overview(user_context))
     else:
-        place_type = "landmark"
+        logger.warning(f"Ignored unexpected callback action: {action[:20]}")
 
-    logger.info(f"Determined place type for {place['name']}: {place_type}")
 
-    place_data = {
-        "name": place["name"],
-        "type": place.get("tourism") or place.get("historic") or place.get("amenity", place_type),
-        "distance": int(place["distance"]),
-        "wikipedia": place.get("wikipedia_extract", ""),
-        "description": place.get("description", ""),
-        "website": place.get("website", ""),
-    }
-    language = "Russian" if lang == "ru" else "English"
-    description_line = (
-        f"Description: {place_data['description']}" if place_data["description"] else ""
-    )
-
-    if place_type == "restaurant":
-        prompt = f"""You are a passionate local foodie with 20+ years of experience. Provide engaging information about this restaurant/cafe:
-
-Name: {place_data["name"]}
-Type: {place_data["type"]}
-Distance: {place_data["distance"]}m away
-{description_line}
-
-Requirements:
-- Write in {language}
-- 3-4 sentences about the cuisine, atmosphere, and what makes it special
-- Include practical visitor information (best dishes, price range if known)
-- Be enthusiastic but honest
-- If you don't know specific details, suggest what might be good based on the restaurant type/name
-- Don't make up exact prices or menu items you're not certain about"""  # noqa: E501
-
-    elif place_type == "nature":
-        wikipedia_line = (
-            f"Wikipedia info: {place_data['wikipedia']}" if place_data["wikipedia"] else ""
-        )
-        prompt = f"""You are a nature-loving local guide. Provide engaging information about this natural attraction:
-
-Name: {place_data["name"]}
-Type: {place_data["type"]}
-Distance: {place_data["distance"]}m away
-{wikipedia_line}
-{description_line}
-
-Requirements:
-- Write in {language}
-- 3-4 sentences about what makes this place beautiful or special
-- Include practical visitor information (best time to visit, what to see)
-- Be engaging and informative
-- Focus on natural features and activities visitors can enjoy"""  # noqa: E501
-
-    elif place_type == "shopping":
-        prompt = f"""You are a knowledgeable local shopping expert. Provide engaging information about this shopping venue:
-
-Name: {place_data["name"]}
-Type: {place_data["type"]}
-Distance: {place_data["distance"]}m away
-{description_line}
-
-Requirements:
-- Write in {language}
-- 3-4 sentences about what makes this place worth visiting
-- Include practical visitor information (what they sell, price range if known)
-- Be enthusiastic but honest
-- If you don't know specific details, suggest what might be found based on the shop type/name"""  # noqa: E501
-
-    elif place_type == "entertainment":
-        prompt = f"""You are a local entertainment expert. Provide engaging information about this entertainment venue:
-
-Name: {place_data["name"]}
-Type: {place_data["type"]}
-Distance: {place_data["distance"]}m away
-{description_line}
-
-Requirements:
-- Write in {language}
-- 3-4 sentences about what makes this place fun or interesting
-- Include practical visitor information (what to expect, best times to visit)
-- Be engaging and informative
-- Focus on the experience visitors can expect"""  # noqa: E501
-
-    elif place_data["wikipedia"]:
-        prompt = f"""You are an expert local guide with 20+ years of experience. Provide detailed, fascinating information about this landmark using the Wikipedia extract provided:
-
-Name: {place_data["name"]}
-Type: {place_data["type"]}
-Distance: {place_data["distance"]}m away
-Wikipedia extract: {place_data["wikipedia"]}
-
-Requirements:
-- Write in {language}
-- 3-4 sentences with interesting historical/cultural facts from the Wikipedia extract
-- Include practical visitor information if relevant
-- Be engaging and informative like a passionate local guide
-- Focus on what makes this place special or unique
-- Use the Wikipedia information but make it sound like you're a local expert
-- Don't start with phrases like 'According to Wikipedia'"""  # noqa: E501
-    else:
-        prompt = f"""You are an expert local guide with 20+ years of experience. Provide detailed, fascinating information about this landmark:
-
-Name: {place_data["name"]}
-Type: {place_data["type"]}
-Distance: {place_data["distance"]}m away
-{description_line}
-
-Requirements:
-- Write in {language}
-- 3-4 sentences with interesting historical/cultural facts
-- Include practical visitor information if relevant
-- Be engaging and informative
-- Focus on what makes this place special or unique
-- If you don't have specific information about this place, be honest and suggest what visitors might find interesting about similar places in the area
-- Don't make up historical facts if you're uncertain"""  # noqa: E501
-
-    emoji = {
-        "restaurant": "🍽️",
-        "nature": "🌳",
-        "shopping": "🛍️",
-        "entertainment": "🎭",
-    }.get(place_type, "🏛️")
-
-    try:
-        detailed_info = generate_answer(prompt)
-    except Exception:
-        logger.exception(f"Failed to generate detailed info for {place['name']}")
-        return (
-            f"🏛️ <b>{escape(place['name'])}</b>\n\n"
-            "Sorry, I couldn't generate detailed information right now. Please try again later."
-        )
-
-    result = f"{emoji} <b>{escape(place['name'])}</b>\n\n{escape(detailed_info)}"
-
-    links = []
-    if place.get("website"):
-        website_url = place["website"]
-        if not website_url.startswith("http"):
-            website_url = "https://" + website_url
-        links.append(f'🌐 <a href="{escape(website_url)}">Official Website</a>')
-    if place.get("wikipedia_url"):
-        links.append(f'📖 <a href="{escape(place["wikipedia_url"])}">Wikipedia</a>')
-    if links:
-        result += "\n\n" + " | ".join(links)
-
-    return result
+async def _food_screen(user_context: dict[str, Any]) -> bot_ui.Screen:
+    lang = user_context["language"]
+    if "food" not in user_context:
+        try:
+            user_context["food"] = await get_nearby_food(
+                user_context["lat"], user_context["lon"], lang=lang
+            )
+        except PlacesUnavailable:
+            return bot_ui.message_with_back(bot_ui.text("food_unavailable", lang), lang)
+    return bot_ui.food_screen(user_context["food"], lang, user_context["location"])
 
 
 async def handle_text_message(update: Update, context: CallbackContext):
@@ -572,7 +240,8 @@ async def register_handlers(app: Application):
     """Register all command and message handlers."""
     app.add_handler(CommandHandler("start", send_welcome))
     app.add_handler(CommandHandler("health", health_check))
-    app.add_handler(MessageHandler(filters.LOCATION, location))
+    # Live location updates arrive as edited messages; they are not handled yet.
+    app.add_handler(MessageHandler(filters.LOCATION & ~filters.UpdateType.EDITED_MESSAGE, location))
     app.add_handler(CallbackQueryHandler(handle_callback_query))
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_text_message))
     app.add_error_handler(handle_error)
