@@ -1,0 +1,558 @@
+[
+ {
+  "id": "ChIJ69BzCxW6yhQRYogpIC50Y5U",
+  "types": [
+   "korean_restaurant",
+   "restaurant",
+   "food",
+   "point_of_interest",
+   "establishment"
+  ],
+  "location": {
+   "latitude": 41.0268271,
+   "longitude": 28.932202
+  },
+  "rating": 4.6,
+  "priceLevel": "PRICE_LEVEL_MODERATE",
+  "userRatingCount": 6933,
+  "displayName": {
+   "text": "Sopung Kore Fatih",
+   "languageCode": "tr"
+  },
+  "primaryType": "korean_restaurant",
+  "priceRange": {
+   "startPrice": {
+    "currencyCode": "TRY",
+    "units": "400"
+   },
+   "endPrice": {
+    "currencyCode": "TRY",
+    "units": "600"
+   }
+  }
+ },
+ {
+  "id": "ChIJffgr2Di6yhQREoOX5zjq31s",
+  "types": [
+   "restaurant",
+   "food",
+   "point_of_interest",
+   "establishment"
+  ],
+  "location": {
+   "latitude": 41.0199606,
+   "longitude": 28.932300400000003
+  },
+  "rating": 4.3,
+  "priceLevel": "PRICE_LEVEL_MODERATE",
+  "userRatingCount": 1114,
+  "displayName": {
+   "text": "Küçük Ev",
+   "languageCode": "tr"
+  },
+  "primaryType": "restaurant",
+  "priceRange": {
+   "startPrice": {
+    "currencyCode": "TRY",
+    "units": "400"
+   },
+   "endPrice": {
+    "currencyCode": "TRY",
+    "units": "600"
+   }
+  }
+ },
+ {
+  "id": "ChIJTxGpJke6yhQROcHC6SuJ7RI",
+  "types": [
+   "cafe",
+   "hookah_bar",
+   "tea_house",
+   "food",
+   "point_of_interest",
+   "establishment"
+  ],
+  "location": {
+   "latitude": 41.0214937,
+   "longitude": 28.926835899999997
+  },
+  "rating": 4.5,
+  "priceLevel": "PRICE_LEVEL_INEXPENSIVE",
+  "userRatingCount": 364,
+  "displayName": {
+   "text": "Saklıbahçe Hookah Cafe",
+   "languageCode": "en"
+  },
+  "primaryType": "cafe",
+  "priceRange": {
+   "startPrice": {
+    "currencyCode": "TRY",
+    "units": "1"
+   },
+   "endPrice": {
+    "currencyCode": "TRY",
+    "units": "200"
+   }
+  }
+ },
+ {
+  "id": "ChIJ36xCI0e6yhQRqLk0tznh4BQ",
+  "types": [
+   "restaurant",
+   "food",
+   "point_of_interest",
+   "establishment"
+  ],
+  "location": {
+   "latitude": 41.0212139,
+   "longitude": 28.927622500000002
+  },
+  "rating": 4.6,
+  "priceLevel": "PRICE_LEVEL_MODERATE",
+  "userRatingCount": 186,
+  "displayName": {
+   "text": "Topkapı restaurant/ahmet baş",
+   "languageCode": "tr"
+  },
+  "primaryType": "restaurant",
+  "priceRange": {
+   "startPrice": {
+    "currencyCode": "TRY",
+    "units": "600"
+   },
+   "endPrice": {
+    "currencyCode": "TRY",
+    "units": "1400"
+   }
+  }
+ },
+ {
+  "id": "ChIJkWNHQke6yhQR4KWwfHBAMPQ",
+  "types": [
+   "cafe",
+   "food",
+   "point_of_interest",
+   "establishment"
+  ],
+  "location": {
+   "latitude": 41.020941,
+   "longitude": 28.928542
+  },
+  "rating": 4.4,
+  "priceLevel": "PRICE_LEVEL_MODERATE",
+  "userRatingCount": 205,
+  "displayName": {
+   "text": "Çınaraltı Cafe",
+   "languageCode": "en"
+  },
+  "primaryType": "cafe",
+  "priceRange": {
+   "startPrice": {
+    "currencyCode": "TRY",
+    "units": "200"
+   },
+   "endPrice": {
+    "currencyCode": "TRY",
+    "units": "400"
+   }
+  }
+ },
+ {
+  "id": "ChIJfcGxLDm6yhQRbwuUwNojM-8",
+  "types": [
+   "turkish_restaurant",
+   "restaurant",
+   "food",
+   "point_of_interest",
+   "establishment"
+  ],
+  "location": {
+   "latitude": 41.0207474,
+   "longitude": 28.932899999999997
+  },
+  "rating": 4.2,
+  "priceLevel": "PRICE_LEVEL_MODERATE",
+  "userRatingCount": 606,
+  "displayName": {
+   "text": "Kul Sofrası",
+   "languageCode": "tr"
+  },
+  "primaryType": "turkish_restaurant",
+  "priceRange": {
+   "startPrice": {
+    "currencyCode": "TRY",
+    "units": "200"
+   },
+   "endPrice": {
+    "currencyCode": "TRY",
+    "units": "1000"
+   }
+  }
+ },
+ {
+  "id": "ChIJ5_tOdz-6yhQR-zqbv0XpSYU",
+  "types": [
+   "cafe",
+   "hookah_bar",
+   "sports_complex",
+   "bar",
+   "event_venue",
+   "sports_activity_location",
+   "restaurant",
+   "food",
+   "point_of_interest",
+   "establishment"
+  ],
+  "location": {
+   "latitude": 41.022945199999995,
+   "longitude": 28.9306337
+  },
+  "rating": 4.5,
+  "userRatingCount": 156,
+  "displayName": {
+   "text": "Sky Cafe & Shisha Lounge & Bar",
+   "languageCode": "tr"
+  },
+  "primaryType": "cafe"
+ },
+ {
+  "id": "ChIJrwsDJUe6yhQRYXkqN8Lx3xk",
+  "types": [
+   "kebab_shop",
+   "restaurant",
+   "food",
+   "point_of_interest",
+   "establishment"
+  ],
+  "location": {
+   "latitude": 41.0216753,
+   "longitude": 28.927244499999997
+  },
+  "rating": 4.7,
+  "priceLevel": "PRICE_LEVEL_MODERATE",
+  "userRatingCount": 329,
+  "displayName": {
+   "text": "Topkapı Kebap",
+   "languageCode": "en"
+  },
+  "primaryType": "kebab_shop",
+  "priceRange": {
+   "startPrice": {
+    "currencyCode": "TRY",
+    "units": "400"
+   },
+   "endPrice": {
+    "currencyCode": "TRY",
+    "units": "600"
+   }
+  }
+ },
+ {
+  "id": "ChIJp-4CLTy6yhQRPWbjQTZ_C64",
+  "types": [
+   "pastry_shop",
+   "bakery",
+   "dessert_shop",
+   "confectionery",
+   "food_store",
+   "store",
+   "food",
+   "point_of_interest",
+   "establishment"
+  ],
+  "location": {
+   "latitude": 41.022104299999995,
+   "longitude": 28.935949800000003
+  },
+  "rating": 4,
+  "userRatingCount": 48,
+  "displayName": {
+   "text": "Anil Cafe Patisserie",
+   "languageCode": "en"
+  },
+  "primaryType": "pastry_shop"
+ },
+ {
+  "id": "ChIJDe073rG7yhQRwt0OUFemgjw",
+  "types": [
+   "coffee_shop",
+   "cafe",
+   "food_store",
+   "store",
+   "food",
+   "point_of_interest",
+   "establishment"
+  ],
+  "location": {
+   "latitude": 41.028184499999995,
+   "longitude": 28.9337587
+  },
+  "rating": 4.7,
+  "priceLevel": "PRICE_LEVEL_INEXPENSIVE",
+  "userRatingCount": 40,
+  "displayName": {
+   "text": "Espresso Cup Coffee",
+   "languageCode": "tr"
+  },
+  "primaryType": "coffee_shop",
+  "priceRange": {
+   "startPrice": {
+    "currencyCode": "TRY",
+    "units": "1"
+   },
+   "endPrice": {
+    "currencyCode": "TRY",
+    "units": "200"
+   }
+  }
+ },
+ {
+  "id": "ChIJpbk9pPe7yhQRn_gSLvqYfag",
+  "types": [
+   "kebab_shop",
+   "turkish_restaurant",
+   "restaurant",
+   "food",
+   "point_of_interest",
+   "establishment"
+  ],
+  "location": {
+   "latitude": 41.0228198,
+   "longitude": 28.934447199999997
+  },
+  "rating": 3.8,
+  "userRatingCount": 6,
+  "displayName": {
+   "text": "Kebapçı Murat",
+   "languageCode": "tr"
+  },
+  "primaryType": "kebab_shop"
+ },
+ {
+  "id": "ChIJE3WTQBa7yhQRUNk-9Na1EcM",
+  "types": [
+   "bakery",
+   "food_store",
+   "store",
+   "food",
+   "point_of_interest",
+   "establishment"
+  ],
+  "location": {
+   "latitude": 41.022213,
+   "longitude": 28.9363717
+  },
+  "rating": 4.5,
+  "priceLevel": "PRICE_LEVEL_INEXPENSIVE",
+  "userRatingCount": 22,
+  "displayName": {
+   "text": "Hürrem Çavuş Börekçisi",
+   "languageCode": "tr"
+  },
+  "primaryType": "bakery",
+  "priceRange": {
+   "startPrice": {
+    "currencyCode": "TRY",
+    "units": "1"
+   },
+   "endPrice": {
+    "currencyCode": "TRY",
+    "units": "200"
+   }
+  }
+ },
+ {
+  "id": "ChIJgT4YOUe6yhQR_Bx_-ngA3us",
+  "types": [
+   "sports_club",
+   "cafe",
+   "association_or_organization",
+   "food",
+   "point_of_interest",
+   "establishment"
+  ],
+  "location": {
+   "latitude": 41.0213144,
+   "longitude": 28.927894799999997
+  },
+  "rating": 4.6,
+  "userRatingCount": 15,
+  "displayName": {
+   "text": "Topkapi Spor Kulübü",
+   "languageCode": "tr"
+  },
+  "primaryType": "sports_club"
+ },
+ {
+  "id": "ChIJsb2OSZ67yhQRvK0_ZVuSBN4",
+  "types": [
+   "indonesian_restaurant",
+   "restaurant",
+   "food",
+   "point_of_interest",
+   "establishment"
+  ],
+  "location": {
+   "latitude": 41.0203591,
+   "longitude": 28.932342799999994
+  },
+  "rating": 3.7,
+  "userRatingCount": 3,
+  "displayName": {
+   "text": "Ayoe Makan",
+   "languageCode": "id"
+  },
+  "primaryType": "indonesian_restaurant"
+ },
+ {
+  "id": "ChIJvwy0U0O7yhQRhtjFqVkp3nY",
+  "types": [
+   "bakery",
+   "food_store",
+   "store",
+   "food",
+   "point_of_interest",
+   "establishment"
+  ],
+  "location": {
+   "latitude": 41.0245178,
+   "longitude": 28.936520599999998
+  },
+  "rating": 5,
+  "userRatingCount": 1,
+  "displayName": {
+   "text": "Fırıncı",
+   "languageCode": "tr"
+  },
+  "primaryType": "bakery"
+ },
+ {
+  "id": "ChIJS86HCuK7yhQRuK3AXtES12A",
+  "types": [
+   "middle_eastern_restaurant",
+   "restaurant",
+   "food",
+   "point_of_interest",
+   "establishment"
+  ],
+  "location": {
+   "latitude": 41.022638,
+   "longitude": 28.935793099999998
+  },
+  "rating": 4.1,
+  "userRatingCount": 46,
+  "displayName": {
+   "text": "Namlı Pide ve Lahmacun Salonu",
+   "languageCode": "tr"
+  },
+  "primaryType": "middle_eastern_restaurant"
+ },
+ {
+  "id": "ChIJGXlzPUe6yhQRg-QqSTixeBs",
+  "types": [
+   "turkish_restaurant",
+   "kebab_shop",
+   "restaurant",
+   "food",
+   "point_of_interest",
+   "establishment"
+  ],
+  "location": {
+   "latitude": 41.0212333,
+   "longitude": 28.927645300000002
+  },
+  "rating": 4.3,
+  "priceLevel": "PRICE_LEVEL_MODERATE",
+  "userRatingCount": 78,
+  "displayName": {
+   "text": "aboov kebap topkapı",
+   "languageCode": "tr"
+  },
+  "primaryType": "turkish_restaurant",
+  "priceRange": {
+   "startPrice": {
+    "currencyCode": "TRY",
+    "units": "400"
+   },
+   "endPrice": {
+    "currencyCode": "TRY",
+    "units": "1200"
+   }
+  }
+ },
+ {
+  "id": "ChIJCY0bfj66yhQRjaBS4v-t-gw",
+  "types": [
+   "restaurant",
+   "food",
+   "point_of_interest",
+   "establishment"
+  ],
+  "location": {
+   "latitude": 41.022472799999996,
+   "longitude": 28.935094699999993
+  },
+  "rating": 4.7,
+  "userRatingCount": 3,
+  "displayName": {
+   "text": "Nazmi Baba",
+   "languageCode": "tr"
+  },
+  "primaryType": "restaurant"
+ },
+ {
+  "id": "ChIJDbO-Gvi7yhQRG-nVzoV8i1c",
+  "types": [
+   "turkish_restaurant",
+   "restaurant",
+   "food",
+   "point_of_interest",
+   "establishment"
+  ],
+  "location": {
+   "latitude": 41.022435099999996,
+   "longitude": 28.936283799999998
+  },
+  "rating": 4.7,
+  "priceLevel": "PRICE_LEVEL_INEXPENSIVE",
+  "userRatingCount": 32,
+  "displayName": {
+   "text": "Semsür çiğköfte Mimarsinan",
+   "languageCode": "tr"
+  },
+  "primaryType": "turkish_restaurant",
+  "priceRange": {
+   "startPrice": {
+    "currencyCode": "TRY",
+    "units": "1"
+   },
+   "endPrice": {
+    "currencyCode": "TRY",
+    "units": "200"
+   }
+  }
+ },
+ {
+  "id": "ChIJby3hAwC7yhQR9pLm8IIEhY0",
+  "types": [
+   "coffee_shop",
+   "cafe",
+   "food_store",
+   "store",
+   "food",
+   "point_of_interest",
+   "establishment"
+  ],
+  "location": {
+   "latitude": 41.026635,
+   "longitude": 28.936093000000003
+  },
+  "rating": 2,
+  "userRatingCount": 1,
+  "displayName": {
+   "text": "Karagümrük Çay Ocağı",
+   "languageCode": "tr"
+  },
+  "primaryType": "coffee_shop"
+ }
+]

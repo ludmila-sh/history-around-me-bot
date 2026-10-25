@@ -1,0 +1,603 @@
+[
+ {
+  "id": "ChIJOwX7amC3yhQRjmk0XyVu5_w",
+  "types": [
+   "persian_restaurant",
+   "restaurant",
+   "point_of_interest",
+   "food",
+   "establishment"
+  ],
+  "location": {
+   "latitude": 41.0325815,
+   "longitude": 28.977806699999995
+  },
+  "rating": 4.4,
+  "userRatingCount": 6798,
+  "displayName": {
+   "text": "Reyhun Iranian Restaurant",
+   "languageCode": "en"
+  },
+  "primaryType": "persian_restaurant"
+ },
+ {
+  "id": "ChIJ8e6BQ-C5yhQRZHkFEWWzCGU",
+  "types": [
+   "hotel",
+   "wellness_center",
+   "gym",
+   "lodging",
+   "sports_activity_location",
+   "health",
+   "restaurant",
+   "point_of_interest",
+   "food",
+   "establishment"
+  ],
+  "location": {
+   "latitude": 41.0309986,
+   "longitude": 28.974477900000004
+  },
+  "rating": 3.7,
+  "userRatingCount": 3343,
+  "displayName": {
+   "text": "Ramada By Wyndham Istanbul Pera",
+   "languageCode": "en"
+  },
+  "primaryType": "hotel"
+ },
+ {
+  "id": "ChIJ0aA-5me3yhQRTfbnpZPQKwc",
+  "types": [
+   "cafe",
+   "point_of_interest",
+   "food",
+   "establishment"
+  ],
+  "location": {
+   "latitude": 41.0323527,
+   "longitude": 28.9761106
+  },
+  "rating": 4.5,
+  "priceLevel": "PRICE_LEVEL_MODERATE",
+  "userRatingCount": 2456,
+  "displayName": {
+   "text": "Mornings In Pera",
+   "languageCode": "tr"
+  },
+  "primaryType": "cafe",
+  "priceRange": {
+   "startPrice": {
+    "currencyCode": "TRY",
+    "units": "400"
+   },
+   "endPrice": {
+    "currencyCode": "TRY",
+    "units": "1400"
+   }
+  }
+ },
+ {
+  "id": "ChIJR7h_yrO3yhQR1LO0w8lfLkg",
+  "types": [
+   "italian_restaurant",
+   "wine_bar",
+   "cocktail_bar",
+   "turkish_restaurant",
+   "mediterranean_restaurant",
+   "pizza_restaurant",
+   "bar",
+   "food_store",
+   "store",
+   "european_restaurant",
+   "restaurant",
+   "point_of_interest",
+   "food",
+   "establishment"
+  ],
+  "location": {
+   "latitude": 41.0348253,
+   "longitude": 28.977100200000002
+  },
+  "rating": 4.7,
+  "priceLevel": "PRICE_LEVEL_MODERATE",
+  "userRatingCount": 5179,
+  "displayName": {
+   "text": "Antique Pizzeria Beyoğlu",
+   "languageCode": "tr"
+  },
+  "primaryType": "italian_restaurant",
+  "priceRange": {
+   "startPrice": {
+    "currencyCode": "TRY",
+    "units": "600"
+   },
+   "endPrice": {
+    "currencyCode": "TRY",
+    "units": "1600"
+   }
+  }
+ },
+ {
+  "id": "ChIJtewIKmC3yhQR4D22xZrXwNM",
+  "types": [
+   "fusion_restaurant",
+   "restaurant",
+   "point_of_interest",
+   "food",
+   "establishment"
+  ],
+  "location": {
+   "latitude": 41.0314529,
+   "longitude": 28.97858
+  },
+  "rating": 4.2,
+  "priceLevel": "PRICE_LEVEL_MODERATE",
+  "userRatingCount": 4245,
+  "displayName": {
+   "text": "Limonlu Bahçe",
+   "languageCode": "tr"
+  },
+  "primaryType": "fusion_restaurant",
+  "priceRange": {
+   "startPrice": {
+    "currencyCode": "TRY",
+    "units": "400"
+   },
+   "endPrice": {
+    "currencyCode": "TRY",
+    "units": "1200"
+   }
+  }
+ },
+ {
+  "id": "ChIJhd6-PGa3yhQRkPyq9aLN268",
+  "types": [
+   "turkish_restaurant",
+   "night_club",
+   "bar",
+   "restaurant",
+   "point_of_interest",
+   "food",
+   "establishment"
+  ],
+  "location": {
+   "latitude": 41.032683899999995,
+   "longitude": 28.9766684
+  },
+  "rating": 4,
+  "priceLevel": "PRICE_LEVEL_VERY_EXPENSIVE",
+  "userRatingCount": 6246,
+  "displayName": {
+   "text": "360 Istanbul",
+   "languageCode": "en"
+  },
+  "primaryType": "turkish_restaurant",
+  "priceRange": {
+   "startPrice": {
+    "currencyCode": "TRY",
+    "units": "2000"
+   }
+  }
+ },
+ {
+  "id": "ChIJtY3owGC3yhQRPgfQORwu9wA",
+  "types": [
+   "turkish_restaurant",
+   "restaurant",
+   "point_of_interest",
+   "food",
+   "establishment"
+  ],
+  "location": {
+   "latitude": 41.0353224,
+   "longitude": 28.9772705
+  },
+  "rating": 4.5,
+  "priceLevel": "PRICE_LEVEL_MODERATE",
+  "userRatingCount": 3802,
+  "displayName": {
+   "text": "Dürümzade",
+   "languageCode": "en"
+  },
+  "primaryType": "turkish_restaurant",
+  "priceRange": {
+   "startPrice": {
+    "currencyCode": "TRY",
+    "units": "200"
+   },
+   "endPrice": {
+    "currencyCode": "TRY",
+    "units": "400"
+   }
+  }
+ },
+ {
+  "id": "ChIJZU9P8aO3yhQRxGxfkkb2Gh8",
+  "types": [
+   "restaurant",
+   "persian_restaurant",
+   "point_of_interest",
+   "food",
+   "establishment"
+  ],
+  "location": {
+   "latitude": 41.0321,
+   "longitude": 28.976349300000003
+  },
+  "rating": 4.7,
+  "userRatingCount": 4236,
+  "displayName": {
+   "text": "shamse restaurant - shamse kebap evi",
+   "languageCode": "en"
+  },
+  "primaryType": "restaurant"
+ },
+ {
+  "id": "ChIJ54CM5Yi3yhQR2UiIkn19O7g",
+  "types": [
+   "fine_dining_restaurant",
+   "kebab_shop",
+   "turkish_restaurant",
+   "restaurant",
+   "point_of_interest",
+   "food",
+   "establishment"
+  ],
+  "location": {
+   "latitude": 41.0341738,
+   "longitude": 28.981591899999998
+  },
+  "rating": 4.8,
+  "priceLevel": "PRICE_LEVEL_VERY_EXPENSIVE",
+  "userRatingCount": 2191,
+  "displayName": {
+   "text": "N'EVET İstanbul Rooftop Restaurant & Roof Bar",
+   "languageCode": "en"
+  },
+  "primaryType": "fine_dining_restaurant",
+  "priceRange": {
+   "startPrice": {
+    "currencyCode": "TRY",
+    "units": "2000"
+   }
+  }
+ },
+ {
+  "id": "ChIJ-UX95eq5yhQRx5kA6OlBCEA",
+  "types": [
+   "kebab_shop",
+   "restaurant",
+   "point_of_interest",
+   "food",
+   "establishment"
+  ],
+  "location": {
+   "latitude": 41.030912099999995,
+   "longitude": 28.9788801
+  },
+  "rating": 4.8,
+  "priceLevel": "PRICE_LEVEL_MODERATE",
+  "userRatingCount": 5074,
+  "displayName": {
+   "text": "Tomtom Kebap",
+   "languageCode": "en"
+  },
+  "primaryType": "kebab_shop",
+  "priceRange": {
+   "startPrice": {
+    "currencyCode": "TRY",
+    "units": "400"
+   },
+   "endPrice": {
+    "currencyCode": "TRY",
+    "units": "800"
+   }
+  }
+ },
+ {
+  "id": "ChIJIzMqZee5yhQRB1BdLYSTtuw",
+  "types": [
+   "eastern_european_restaurant",
+   "european_restaurant",
+   "restaurant",
+   "point_of_interest",
+   "food",
+   "establishment"
+  ],
+  "location": {
+   "latitude": 41.029841399999995,
+   "longitude": 28.9738742
+  },
+  "rating": 4.7,
+  "priceLevel": "PRICE_LEVEL_MODERATE",
+  "userRatingCount": 3806,
+  "displayName": {
+   "text": "GALAKTION",
+   "languageCode": "tr"
+  },
+  "primaryType": "eastern_european_restaurant",
+  "priceRange": {
+   "startPrice": {
+    "currencyCode": "TRY",
+    "units": "800"
+   },
+   "endPrice": {
+    "currencyCode": "TRY",
+    "units": "1800"
+   }
+  }
+ },
+ {
+  "id": "ChIJzXjJUQC3yhQRgp-4882Hl5I",
+  "types": [
+   "turkish_restaurant",
+   "restaurant",
+   "point_of_interest",
+   "food",
+   "establishment"
+  ],
+  "location": {
+   "latitude": 41.0333372,
+   "longitude": 28.9755478
+  },
+  "rating": 4.2,
+  "priceLevel": "PRICE_LEVEL_MODERATE",
+  "userRatingCount": 1243,
+  "displayName": {
+   "text": "Mahir Lokantası Pera",
+   "languageCode": "en"
+  },
+  "primaryType": "turkish_restaurant",
+  "priceRange": {
+   "startPrice": {
+    "currencyCode": "TRY",
+    "units": "600"
+   },
+   "endPrice": {
+    "currencyCode": "TRY",
+    "units": "1600"
+   }
+  }
+ },
+ {
+  "id": "ChIJrwv6v-C5yhQRL9AVDZsH9QE",
+  "types": [
+   "hotel",
+   "scenic_spot",
+   "lodging",
+   "restaurant",
+   "point_of_interest",
+   "food",
+   "establishment"
+  ],
+  "location": {
+   "latitude": 41.0289381,
+   "longitude": 28.9747241
+  },
+  "rating": 4.5,
+  "userRatingCount": 925,
+  "displayName": {
+   "text": "Ring Stone Hotels Bosphorus",
+   "languageCode": "en"
+  },
+  "primaryType": "hotel"
+ },
+ {
+  "id": "ChIJbyzm-1-3yhQREwcDH9vdbWY",
+  "types": [
+   "eastern_european_restaurant",
+   "european_restaurant",
+   "restaurant",
+   "point_of_interest",
+   "food",
+   "establishment"
+  ],
+  "location": {
+   "latitude": 41.0325373,
+   "longitude": 28.975471499999998
+  },
+  "rating": 4.4,
+  "priceLevel": "PRICE_LEVEL_MODERATE",
+  "userRatingCount": 4507,
+  "displayName": {
+   "text": "Ficcin Restaurant",
+   "languageCode": "en"
+  },
+  "primaryType": "eastern_european_restaurant",
+  "priceRange": {
+   "startPrice": {
+    "currencyCode": "TRY",
+    "units": "600"
+   },
+   "endPrice": {
+    "currencyCode": "TRY",
+    "units": "1600"
+   }
+  }
+ },
+ {
+  "id": "ChIJ7a71COC5yhQRlF0H7qsUeYQ",
+  "types": [
+   "restaurant",
+   "point_of_interest",
+   "food",
+   "establishment"
+  ],
+  "location": {
+   "latitude": 41.031579699999995,
+   "longitude": 28.9761626
+  },
+  "rating": 4.1,
+  "priceLevel": "PRICE_LEVEL_MODERATE",
+  "userRatingCount": 7215,
+  "displayName": {
+   "text": "Midpoint",
+   "languageCode": "en"
+  },
+  "primaryType": "restaurant",
+  "priceRange": {
+   "startPrice": {
+    "currencyCode": "TRY",
+    "units": "600"
+   },
+   "endPrice": {
+    "currencyCode": "TRY",
+    "units": "1600"
+   }
+  }
+ },
+ {
+  "id": "ChIJFyIWheC5yhQRkDn-bxW9KCU",
+  "types": [
+   "restaurant",
+   "point_of_interest",
+   "food",
+   "establishment"
+  ],
+  "location": {
+   "latitude": 41.0294017,
+   "longitude": 28.9755439
+  },
+  "rating": 4.5,
+  "priceLevel": "PRICE_LEVEL_MODERATE",
+  "userRatingCount": 4595,
+  "displayName": {
+   "text": "Varuna Gezgin Cafe - İstanbul",
+   "languageCode": "en"
+  },
+  "primaryType": "restaurant",
+  "priceRange": {
+   "startPrice": {
+    "currencyCode": "TRY",
+    "units": "400"
+   },
+   "endPrice": {
+    "currencyCode": "TRY",
+    "units": "1200"
+   }
+  }
+ },
+ {
+  "id": "ChIJy30zq-C5yhQRW0Dy1evbJNg",
+  "types": [
+   "turkish_restaurant",
+   "restaurant",
+   "point_of_interest",
+   "food",
+   "establishment"
+  ],
+  "location": {
+   "latitude": 41.029118499999996,
+   "longitude": 28.9730937
+  },
+  "rating": 4.6,
+  "priceLevel": "PRICE_LEVEL_VERY_EXPENSIVE",
+  "userRatingCount": 2099,
+  "displayName": {
+   "text": "Aheste",
+   "languageCode": "tr"
+  },
+  "primaryType": "turkish_restaurant",
+  "priceRange": {
+   "startPrice": {
+    "currencyCode": "TRY",
+    "units": "2000"
+   }
+  }
+ },
+ {
+  "id": "ChIJIwvracy5yhQRELDO_rXAjsk",
+  "types": [
+   "coffee_shop",
+   "cafe",
+   "food_store",
+   "store",
+   "point_of_interest",
+   "food",
+   "establishment"
+  ],
+  "location": {
+   "latitude": 41.0292315,
+   "longitude": 28.9749897
+  },
+  "rating": 4.1,
+  "priceLevel": "PRICE_LEVEL_MODERATE",
+  "userRatingCount": 2019,
+  "displayName": {
+   "text": "Starbucks",
+   "languageCode": "tr"
+  },
+  "primaryType": "coffee_shop",
+  "priceRange": {
+   "startPrice": {
+    "currencyCode": "TRY",
+    "units": "200"
+   },
+   "endPrice": {
+    "currencyCode": "TRY",
+    "units": "400"
+   }
+  }
+ },
+ {
+  "id": "ChIJReR3RuC5yhQR_t7o9KL5qYQ",
+  "types": [
+   "restaurant",
+   "point_of_interest",
+   "food",
+   "establishment"
+  ],
+  "location": {
+   "latitude": 41.0310369,
+   "longitude": 28.9741962
+  },
+  "rating": 4.3,
+  "priceLevel": "PRICE_LEVEL_VERY_EXPENSIVE",
+  "userRatingCount": 2730,
+  "displayName": {
+   "text": "Mikla",
+   "languageCode": "en"
+  },
+  "primaryType": "restaurant",
+  "priceRange": {
+   "startPrice": {
+    "currencyCode": "TRY",
+    "units": "2000"
+   }
+  }
+ },
+ {
+  "id": "ChIJY2G2EGS3yhQRECsfD0OeIOQ",
+  "types": [
+   "turkish_restaurant",
+   "breakfast_restaurant",
+   "restaurant",
+   "point_of_interest",
+   "food",
+   "establishment"
+  ],
+  "location": {
+   "latitude": 41.034594399999996,
+   "longitude": 28.980831199999997
+  },
+  "rating": 4.2,
+  "priceLevel": "PRICE_LEVEL_MODERATE",
+  "userRatingCount": 3263,
+  "displayName": {
+   "text": "Lades Menemen",
+   "languageCode": "tr"
+  },
+  "primaryType": "turkish_restaurant",
+  "priceRange": {
+   "startPrice": {
+    "currencyCode": "TRY",
+    "units": "400"
+   },
+   "endPrice": {
+    "currencyCode": "TRY",
+    "units": "600"
+   }
+  }
+ }
+]

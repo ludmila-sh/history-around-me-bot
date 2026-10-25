@@ -22,12 +22,14 @@ OVERPASS_URLS = (
     "https://z.overpass-api.de/api/interpreter",
 )
 OPENTRIPMAP_HOST = "opentripmap-places-v1.p.rapidapi.com"  # RapidAPI listing
+GOOGLE_NEARBY_URL = "https://places.googleapis.com/v1/places:searchNearby"
 WIKIPEDIA_API = "https://{lang}.wikipedia.org/w/api.php"
 
 NEAR_RADIUS = 500  # ~5 minutes on foot
 WIDE_RADIUS = 1500
 MIN_PLACES = 3
 MAX_PER_CATEGORY = 10
+MAX_FOOD_PLACES = 5
 MAX_LOCAL_WIKIS = 1
 TOTAL_TIMEOUT = 15  # seconds for the whole search
 REQUEST_TIMEOUT = (3, 7)  # connect, read
@@ -152,6 +154,58 @@ def _fetch_opentripmap(lat: float, lon: float, radius: int, lang: str) -> list[d
     )
     response.raise_for_status()
     return response.json()
+
+
+# Rating, review count and price are in the Enterprise billing tier; ask for nothing else.
+GOOGLE_FOOD_FIELDS = (
+    "places.id,places.displayName,places.primaryType,places.types,places.location,"
+    "places.rating,places.userRatingCount,places.priceRange"
+)
+GOOGLE_FOOD_TYPES = ["restaurant", "cafe", "coffee_shop", "bakery"]
+
+
+def _fetch_google_food(lat: float, lon: float, radius: int, lang: str) -> list[dict[str, Any]]:
+    response = requests.post(
+        GOOGLE_NEARBY_URL,
+        headers={
+            "X-Goog-Api-Key": app_settings.GOOGLE_PLACES_API_KEY,
+            "X-Goog-FieldMask": GOOGLE_FOOD_FIELDS,
+        },
+        json={
+            "includedTypes": GOOGLE_FOOD_TYPES,
+            "maxResultCount": 20,
+            "rankPreference": "POPULARITY",
+            "languageCode": lang,
+            "locationRestriction": {
+                "circle": {"center": {"latitude": lat, "longitude": lon}, "radius": radius}
+            },
+        },
+        timeout=REQUEST_TIMEOUT,
+    )
+    response.raise_for_status()
+    return response.json().get("places", [])
+
+
+async def get_nearby_food(lat: float, lon: float, lang: str = "en") -> list[dict[str, Any]]:
+    """Best-rated food and coffee places near a point, widening the radius if few qualify.
+
+    Called only when the user opens the food category: each request is billed.
+    Raises PlacesUnavailable if Google cannot be reached; there is no fallback source.
+    """
+    try:
+        async with asyncio.timeout(TOTAL_TIMEOUT):
+            for radius in (NEAR_RADIUS, WIDE_RADIUS):
+                raw = await asyncio.to_thread(_fetch_google_food, lat, lon, radius, lang)
+                places = parse.parse_google_food(raw, lat, lon)
+                if len(places) >= MIN_PLACES:
+                    break
+    except TimeoutError as e:
+        raise PlacesUnavailable("food search timed out") from e
+    except requests.RequestException as e:
+        logger.warning(f"Google Places failed: {describe_error(e)}")
+        raise PlacesUnavailable("Google Places failed") from e
+    logger.info(f"Found {len(places)} food places within {radius} m")
+    return places[:MAX_FOOD_PLACES]
 
 
 def _wikipedia_languages(lang: str, places: list[dict[str, Any]]) -> list[str]:

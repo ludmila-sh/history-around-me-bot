@@ -266,3 +266,77 @@ def parse_opentripmap(items: list[dict[str, Any]]) -> list[dict[str, Any]]:
             }
         )
     return sorted(places, key=lambda place: place["distance"])
+
+
+# Google food ranking: ratings are shrunk toward PRIOR_RATING by PRIOR_REVIEWS imaginary votes,
+# so 4.9 from 60 reviews does not beat 4.6 from 4000.
+MIN_REVIEWS = 50
+PRIOR_REVIEWS = 50
+PRIOR_RATING = 4.0
+CURRENCY_SYMBOLS = {"TRY": "₺", "USD": "$", "EUR": "€", "GBP": "£", "RUB": "₽", "JPY": "¥"}
+
+
+def rating_score(rating: float, reviews: int) -> float:
+    return (rating * reviews + PRIOR_RATING * PRIOR_REVIEWS) / (reviews + PRIOR_REVIEWS)
+
+
+def format_price_range(price_range: dict[str, Any] | None) -> str:
+    """ "₺400–1400", "₺2000+" for an open range, "CHF 20–40" for a currency without a symbol."""
+    start = (price_range or {}).get("startPrice")
+    if not start:
+        return ""
+    code = start["currencyCode"]
+    prefix = CURRENCY_SYMBOLS.get(code, f"{code} ")
+    end = price_range.get("endPrice")
+    if not end:
+        return f"{prefix}{start['units']}+"
+    return f"{prefix}{start['units']}–{end['units']}"
+
+
+def parse_google_food(
+    google_places: list[dict[str, Any]], lat: float, lon: float
+) -> list[dict[str, Any]]:
+    """Turn Places API (New) nearby results into food places, best first.
+
+    Dropped: hotels (lodging), places with few reviews. The price is empty when Google has none.
+    """
+    places = []
+    for item in google_places:
+        reviews = item.get("userRatingCount", 0)
+        rating = item.get("rating")
+        name = item.get("displayName", {}).get("text", "")
+        location = item.get("location")
+        if (
+            not name
+            or not location
+            or rating is None
+            or reviews < MIN_REVIEWS
+            or "lodging" in item.get("types", [])
+        ):
+            continue
+        places.append(
+            {
+                "name": name,
+                "category_key": FOOD,
+                "category": item.get("primaryType", "").replace("_", " ").title(),
+                "description": "",
+                "address": "",
+                "latitude": location["latitude"],
+                "longitude": location["longitude"],
+                "distance": distance_m(lat, lon, location["latitude"], location["longitude"]),
+                "source": "google",
+                "rating": rating,
+                "review_count": reviews,
+                "price": format_price_range(item.get("priceRange")),
+                "place_id": item.get("id", ""),
+                "wikipedia": "",
+                "wikidata": "",
+            }
+        )
+    return sorted(
+        places,
+        key=lambda place: (
+            -rating_score(place["rating"], place["review_count"]),
+            place["distance"],
+        ),
+    )

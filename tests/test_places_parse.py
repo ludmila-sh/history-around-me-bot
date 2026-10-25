@@ -5,11 +5,14 @@ import pytest
 
 from src.places_parse import (
     categorize,
+    format_price_range,
     merge_wikipedia,
     otm_category,
+    parse_google_food,
     parse_opentripmap,
     parse_overpass,
     parse_wikipedia,
+    rating_score,
     remove_duplicates,
 )
 
@@ -233,3 +236,82 @@ def test_opentripmap_rate_tolerates_heritage_suffix_and_skips_incomplete_items()
         {"name": "", "kinds": "historic", "rate": 3, "point": {"lat": 1, "lon": 2}},  # no name
     ]
     assert [p["name"] for p in parse_opentripmap(items)] == ["A"]
+
+
+ISTIKLAL = (41.032435, 28.976382)
+KARAGUMRUK = (41.024279, 28.931283)
+ANKARA = (39.943489, 32.858246)
+
+
+def _food(name: str, origin: tuple[float, float]) -> list[dict]:
+    raw = json.loads((FIXTURES / f"google_food_{name}.json").read_text(encoding="utf-8"))
+    return parse_google_food(raw, *origin)
+
+
+def test_food_drops_hotels_even_if_they_have_a_restaurant():
+    names = [place["name"] for place in _food("istiklal", ISTIKLAL)]
+    assert len(names) == 18  # 20 results minus 2 hotels
+    assert "Ramada By Wyndham Istanbul Pera" not in names
+
+
+def test_food_drops_places_with_few_reviews():
+    places = _food("karagumruk", KARAGUMRUK)
+    assert len(places) == 9  # 20 results, 11 have fewer than 50 reviews
+    assert all(place["review_count"] >= 50 for place in places)
+
+
+def test_food_is_ranked_by_shrunk_rating_not_raw_rating():
+    places = _food("ankara", ANKARA)
+    scores = [rating_score(p["rating"], p["review_count"]) for p in places]
+    assert scores == sorted(scores, reverse=True)
+    # Raw rating alone would put the 160-review 4.8 shop first; the well-reviewed one wins.
+    assert rating_score(4.9, 60) < rating_score(4.6, 4000)
+
+
+def test_food_fields_are_not_swapped():
+    place = next(p for p in _food("ankara", ANKARA) if p["name"] == "Börekçi Hüseyin Usta")
+    assert (place["rating"], place["review_count"]) == (4.3, 996)
+    assert place["price"] == "₺200–400"
+    assert place["place_id"] == "ChIJ7Q0Xr21P0xQRRPsPkioSDqE"
+    assert (place["latitude"], place["longitude"]) == (39.940247299999996, 32.855391499999996)
+    assert 300 < place["distance"] < 500  # computed from the search point, not copied
+    assert place["category"] == "Bakery" and place["source"] == "google"
+
+
+def test_food_without_price_is_kept_with_empty_price():
+    places = _food("istiklal", ISTIKLAL)
+    assert any(place["price"] == "" for place in places)
+    assert any(place["price"] for place in places)
+
+
+@pytest.mark.parametrize(
+    ("price_range", "expected"),
+    [
+        (
+            {
+                "startPrice": {"currencyCode": "TRY", "units": "400"},
+                "endPrice": {"currencyCode": "TRY", "units": "1400"},
+            },
+            "₺400–1400",
+        ),
+        ({"startPrice": {"currencyCode": "TRY", "units": "2000"}}, "₺2000+"),
+        (
+            {
+                "startPrice": {"currencyCode": "EUR", "units": "15"},
+                "endPrice": {"currencyCode": "EUR", "units": "30"},
+            },
+            "€15–30",
+        ),
+        (
+            {
+                "startPrice": {"currencyCode": "CHF", "units": "20"},
+                "endPrice": {"currencyCode": "CHF", "units": "40"},
+            },
+            "CHF 20–40",
+        ),
+        (None, ""),
+        ({}, ""),
+    ],
+)
+def test_price_uses_the_currency_from_the_source(price_range, expected):
+    assert format_price_range(price_range) == expected

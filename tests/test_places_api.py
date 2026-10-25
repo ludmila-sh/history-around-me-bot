@@ -183,3 +183,63 @@ def test_opentripmap_http_error_is_raised_not_swallowed(monkeypatch):
     with pytest.raises(requests.HTTPError) as error:
         places_api._fetch_opentripmap(41.0, 29.0, 500, "en")
     assert places_api.describe_error(error.value) == f"HTTP 429 from {places_api.OPENTRIPMAP_HOST}"
+
+
+def _food_fixture() -> list[dict]:
+    return json.loads((FIXTURES / "google_food_ankara.json").read_text(encoding="utf-8"))
+
+
+def test_google_request_asks_only_for_needed_fields_and_keeps_key_in_header(monkeypatch):
+    seen = {}
+
+    def post(url, **kwargs):
+        seen.update(url=url, **kwargs)
+        return SimpleNamespace(
+            raise_for_status=lambda: None, json=lambda: {"places": [{"id": "x"}]}
+        )
+
+    monkeypatch.setattr(places_api.requests, "post", post)
+
+    assert places_api._fetch_google_food(39.9, 32.8, 500, "ru") == [{"id": "x"}]
+    assert seen["headers"]["X-Goog-Api-Key"] == "test-google-key"
+    assert "photos" not in seen["headers"]["X-Goog-FieldMask"]
+    assert "editorialSummary" not in seen["headers"]["X-Goog-FieldMask"]
+    assert seen["json"]["languageCode"] == "ru"
+    assert seen["json"]["locationRestriction"]["circle"]["radius"] == 500
+
+
+def test_food_returns_five_best_places_in_one_request_when_enough_qualify(monkeypatch):
+    radii = []
+
+    def fetch(lat, lon, radius, lang):
+        radii.append(radius)
+        return _food_fixture()
+
+    monkeypatch.setattr(places_api, "_fetch_google_food", fetch)
+
+    places = asyncio.run(places_api.get_nearby_food(*ORIGIN, lang="en"))
+
+    assert len(places) == 5 and radii == [500]
+
+
+def test_food_widens_radius_when_few_places_qualify(monkeypatch):
+    radii = []
+
+    def fetch(lat, lon, radius, lang):
+        radii.append(radius)
+        return [] if radius == 500 else _food_fixture()
+
+    monkeypatch.setattr(places_api, "_fetch_google_food", fetch)
+
+    assert asyncio.run(places_api.get_nearby_food(*ORIGIN, lang="en"))
+    assert radii == [500, 1500]
+
+
+def test_food_failure_is_reported_not_hidden(monkeypatch):
+    def fetch(lat, lon, radius, lang):
+        raise requests.ConnectionError("down")
+
+    monkeypatch.setattr(places_api, "_fetch_google_food", fetch)
+
+    with pytest.raises(places_api.PlacesUnavailable):
+        asyncio.run(places_api.get_nearby_food(*ORIGIN, lang="en"))
