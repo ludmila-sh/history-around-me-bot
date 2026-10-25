@@ -1,0 +1,869 @@
+[
+ {
+  "xid": "N4506862293",
+  "name": "Hurrem Haseki (Roksolana) Turbesi",
+  "dist": 27.54167734,
+  "rate": 1,
+  "osm": "node/4506862293",
+  "kinds": "historic,monuments_and_memorials,interesting_places,monuments",
+  "point": {
+   "lon": 28.96480941772461,
+   "lat": 41.01566696166992
+  }
+ },
+ {
+  "xid": "W111002511",
+  "name": "Tomb of Hürrem Sultan",
+  "dist": 38.52418269,
+  "rate": 2,
+  "osm": "way/111002511",
+  "wikidata": "Q85817411",
+  "kinds": "cemeteries,historic,monuments_and_memorials,burial_places,interesting_places,monuments",
+  "point": {
+   "lon": 28.96457862854004,
+   "lat": 41.0156364440918
+  }
+ },
+ {
+  "xid": "Q85813863",
+  "name": "Tomb of Suleiman the Magnificent",
+  "dist": 49.43715465,
+  "rate": 2,
+  "wikidata": "Q85813863",
+  "kinds": "historic,monuments_and_memorials,burial_places,interesting_places,other_burial_places,monuments",
+  "point": {
+   "lon": 28.96446990966797,
+   "lat": 41.015689849853516
+  }
+ },
+ {
+  "xid": "N4506783904",
+  "name": "Kanuni Sultan Suleyman 1 Turbesi",
+  "dist": 50.22714602,
+  "rate": 1,
+  "osm": "node/4506783904",
+  "kinds": "historic,monuments_and_memorials,interesting_places,monuments",
+  "point": {
+   "lon": 28.964466094970703,
+   "lat": 41.01570129394531
+  }
+ },
+ {
+  "xid": "N4999068057",
+  "name": "",
+  "dist": 65.68873883,
+  "rate": 0,
+  "osm": "node/4999068057",
+  "kinds": "view_points,other,interesting_places",
+  "point": {
+   "lon": 28.965280532836914,
+   "lat": 41.0159912109375
+  }
+ },
+ {
+  "xid": "N7964620085",
+  "name": "Taht Istanbul",
+  "dist": 115.2251151,
+  "rate": 1,
+  "osm": "node/7964620085",
+  "kinds": "other,unclassified_objects,interesting_places,tourist_object",
+  "point": {
+   "lon": 28.966264724731445,
+   "lat": 41.01577377319336
+  }
+ },
+ {
+  "xid": "N8088572819",
+  "name": "Taht Istanbul",
+  "dist": 119.15631321,
+  "rate": 1,
+  "osm": "node/8088572819",
+  "kinds": "view_points,other,interesting_places",
+  "point": {
+   "lon": 28.966293334960938,
+   "lat": 41.01581954956055
+  }
+ },
+ {
+  "xid": "R1564032",
+  "name": "Süleymaniye Mosque",
+  "dist": 125.75593565,
+  "rate": 7,
+  "osm": "relation/1564032",
+  "wikidata": "Q178643",
+  "kinds": "religion,mosques,interesting_places",
+  "point": {
+   "lon": 28.963977813720703,
+   "lat": 41.016300201416016
+  }
+ },
+ {
+  "xid": "W112388848",
+  "name": "Samanveren Cami",
+  "dist": 142.2995738,
+  "rate": 1,
+  "osm": "way/112388848",
+  "kinds": "religion,other_temples,interesting_places",
+  "point": {
+   "lon": 28.966552734375,
+   "lat": 41.015892028808594
+  }
+ },
+ {
+  "xid": "N4506862292",
+  "name": "",
+  "dist": 162.88002269,
+  "rate": 0,
+  "osm": "node/4506862292",
+  "kinds": "fountains,cultural,urban_environment,interesting_places",
+  "point": {
+   "lon": 28.963552474975586,
+   "lat": 41.01645278930664
+  }
+ },
+ {
+  "xid": "N6939603515",
+  "name": "Mirar Sinan",
+  "dist": 188.97206964,
+  "rate": 2,
+  "osm": "node/6939603515",
+  "wikidata": "Q85817770",
+  "kinds": "historic,monuments_and_memorials,burial_places,interesting_places,other_burial_places,restaurants,foods,monuments,tourist_facilities",
+  "point": {
+   "lon": 28.96277618408203,
+   "lat": 41.01583480834961
+  }
+ },
+ {
+  "xid": "Q1366011",
+  "name": "Chaldean Catholic Archeparchy of Diyarbakir",
+  "dist": 196.89667689,
+  "rate": 2,
+  "wikidata": "Q1366011",
+  "kinds": "religion,other_temples,interesting_places",
+  "point": {
+   "lon": 28.96666717529297,
+   "lat": 41.016666412353516
+  }
+ },
+ {
+  "xid": "W583229111",
+  "name": "",
+  "dist": 200.92959781,
+  "rate": 0,
+  "osm": "way/583229111",
+  "kinds": "fountains,cultural,urban_environment,interesting_places",
+  "point": {
+   "lon": 28.963680267333984,
+   "lat": 41.01392364501953
+  }
+ },
+ {
+  "xid": "N6927080285",
+  "name": "fioka te plastikes",
+  "dist": 207.64053967,
+  "rate": 1,
+  "osm": "node/6927080285",
+  "kinds": "religion,other_temples,interesting_places",
+  "point": {
+   "lon": 28.967430114746094,
+   "lat": 41.015380859375
+  }
+ },
+ {
+  "xid": "W308598205",
+  "name": "Tomb of Mimar Sinan",
+  "dist": 218.09108271,
+  "rate": 2,
+  "osm": "way/308598205",
+  "wikidata": "Q85817770",
+  "kinds": "cemeteries,historic,monuments_and_memorials,burial_places,interesting_places,monuments",
+  "point": {
+   "lon": 28.963930130004883,
+   "lat": 41.017250061035156
+  }
+ },
+ {
+  "xid": "W240079796",
+  "name": "Siyavuş Paşa Medresesi",
+  "dist": 220.43655706,
+  "rate": 1,
+  "osm": "way/240079796",
+  "kinds": "religion,other_temples,interesting_places",
+  "point": {
+   "lon": 28.966140747070312,
+   "lat": 41.0172233581543
+  }
+ },
+ {
+  "xid": "N5112744278",
+  "name": "Bezzazi Cedit Cami",
+  "dist": 224.58502732,
+  "rate": 1,
+  "osm": "node/5112744278",
+  "kinds": "religion,other_temples,interesting_places",
+  "point": {
+   "lon": 28.967288970947266,
+   "lat": 41.01445770263672
+  }
+ },
+ {
+  "xid": "W255550130",
+  "name": "Yavaşçı Şahin Mehmet Ali Paşa Cami",
+  "dist": 236.49724575,
+  "rate": 1,
+  "osm": "way/255550130",
+  "kinds": "religion,other_temples,interesting_places",
+  "point": {
+   "lon": 28.96771812438965,
+   "lat": 41.01587677001953
+  }
+ },
+ {
+  "xid": "N3373112991",
+  "name": "Hoca Hamza Cami",
+  "dist": 237.52869337,
+  "rate": 1,
+  "osm": "node/3373112991",
+  "kinds": "religion,other_temples,interesting_places",
+  "point": {
+   "lon": 28.96648406982422,
+   "lat": 41.01725387573242
+  }
+ },
+ {
+  "xid": "Q6088683",
+  "name": "Istanbul Zoology Museum",
+  "dist": 261.20023588,
+  "rate": 2,
+  "wikidata": "Q6088683",
+  "kinds": "museums,cultural,science_museums,interesting_places",
+  "point": {
+   "lon": 28.963611602783203,
+   "lat": 41.01333236694336
+  }
+ },
+ {
+  "xid": "N5110344551",
+  "name": "Kepenekci sinan camii",
+  "dist": 275.29915339,
+  "rate": 2,
+  "osm": "node/5110344551",
+  "wikidata": "Q106223671",
+  "kinds": "religion,other_temples,interesting_places",
+  "point": {
+   "lon": 28.965862274169922,
+   "lat": 41.0178337097168
+  }
+ },
+ {
+  "xid": "W330348666",
+  "name": "Category:Kepenekçi Sinan Madrasa",
+  "dist": 277.93858081,
+  "rate": 2,
+  "osm": "way/330348666",
+  "wikidata": "Q106223671",
+  "kinds": "religion,other_temples,interesting_places",
+  "point": {
+   "lon": 28.965896606445312,
+   "lat": 41.017852783203125
+  }
+ },
+ {
+  "xid": "W316903983",
+  "name": "Atik İbrahim Paşa Cami",
+  "dist": 290.16545864,
+  "rate": 1,
+  "osm": "way/316903983",
+  "kinds": "religion,other_temples,interesting_places",
+  "point": {
+   "lon": 28.968280792236328,
+   "lat": 41.01472854614258
+  }
+ },
+ {
+  "xid": "W639302102",
+  "name": "Beyazıt Tower",
+  "dist": 296.43636481,
+  "rate": 3,
+  "osm": "way/639302102",
+  "wikidata": "Q853029",
+  "kinds": "architecture,towers,interesting_places,other_towers",
+  "point": {
+   "lon": 28.964927673339844,
+   "lat": 41.012779235839844
+  }
+ },
+ {
+  "xid": "N5953007770",
+  "name": "",
+  "dist": 315.42481561,
+  "rate": 0,
+  "osm": "node/5953007770",
+  "kinds": "view_points,other,interesting_places",
+  "point": {
+   "lon": 28.9685001373291,
+   "lat": 41.01450729370117
+  }
+ },
+ {
+  "xid": "W520334251",
+  "name": "Alipaşa Cami",
+  "dist": 319.2093933,
+  "rate": 1,
+  "osm": "way/520334251",
+  "kinds": "religion,other_temples,interesting_places",
+  "point": {
+   "lon": 28.966188430786133,
+   "lat": 41.01272964477539
+  }
+ },
+ {
+  "xid": "W111148008",
+  "name": "Katip Şemsettin Cami",
+  "dist": 320.96527714,
+  "rate": 1,
+  "osm": "way/111148008",
+  "kinds": "religion,other_temples,interesting_places",
+  "point": {
+   "lon": 28.962831497192383,
+   "lat": 41.017845153808594
+  }
+ },
+ {
+  "xid": "N4763681623",
+  "name": "Alfred Heilbronn Botanical Garden",
+  "dist": 330.97076878,
+  "rate": 3,
+  "osm": "node/4763681623",
+  "wikidata": "Q55594541",
+  "kinds": "urban_environment,gardens_and_parks,cultural,interesting_places",
+  "point": {
+   "lon": 28.963871002197266,
+   "lat": 41.018314361572266
+  }
+ },
+ {
+  "xid": "R7527656",
+  "name": "Valide Hanı",
+  "dist": 334.0400243,
+  "rate": 1,
+  "osm": "relation/7527656",
+  "kinds": "religion,other_temples,interesting_places",
+  "point": {
+   "lon": 28.968238830566406,
+   "lat": 41.01374816894531
+  }
+ },
+ {
+  "xid": "W112659198",
+  "name": "Timurtaş Cami",
+  "dist": 333.79699976,
+  "rate": 1,
+  "osm": "way/112659198",
+  "kinds": "religion,other_temples,interesting_places",
+  "point": {
+   "lon": 28.967538833618164,
+   "lat": 41.017738342285156
+  }
+ },
+ {
+  "xid": "N5919012285",
+  "name": "Бюйюк Валиде Султан Хан",
+  "dist": 348.2735562,
+  "rate": 1,
+  "osm": "node/5919012285",
+  "kinds": "other,unclassified_objects,interesting_places,tourist_object",
+  "point": {
+   "lon": 28.968505859375,
+   "lat": 41.013824462890625
+  }
+ },
+ {
+  "xid": "N5244812095",
+  "name": "Elhaç Timurtaş Cami Şerifi",
+  "dist": 349.06730768,
+  "rate": 1,
+  "osm": "node/5244812095",
+  "kinds": "religion,other_temples,interesting_places",
+  "point": {
+   "lon": 28.967884063720703,
+   "lat": 41.01768493652344
+  }
+ },
+ {
+  "xid": "W255550126",
+  "name": "Valide Hanı Mescidi",
+  "dist": 351.35734379,
+  "rate": 1,
+  "osm": "way/255550126",
+  "kinds": "religion,other_temples,interesting_places",
+  "point": {
+   "lon": 28.968486785888672,
+   "lat": 41.01374816894531
+  }
+ },
+ {
+  "xid": "N5918978586",
+  "name": "Бюйк Валиде Султан Хан",
+  "dist": 352.40735048,
+  "rate": 1,
+  "osm": "node/5918978586",
+  "kinds": "other,unclassified_objects,interesting_places,tourist_object",
+  "point": {
+   "lon": 28.96845817565918,
+   "lat": 41.01369857788086
+  }
+ },
+ {
+  "xid": "W112659195",
+  "name": "Tahtakale Hamam",
+  "dist": 355.95591762,
+  "rate": 2,
+  "osm": "way/112659195",
+  "wikidata": "Q100320010",
+  "kinds": "architecture,historic_architecture,interesting_places,other_buildings_and_structures",
+  "point": {
+   "lon": 28.96790885925293,
+   "lat": 41.01775360107422
+  }
+ },
+ {
+  "xid": "N4494301289",
+  "name": "Roof of Istanbul",
+  "dist": 360.22873673,
+  "rate": 1,
+  "osm": "node/4494301289",
+  "kinds": "other,unclassified_objects,interesting_places,tourist_object",
+  "point": {
+   "lon": 28.968812942504883,
+   "lat": 41.0140266418457
+  }
+ },
+ {
+  "xid": "W329208783",
+  "name": "Kantarcılar Mescidi",
+  "dist": 365.49094634,
+  "rate": 1,
+  "osm": "way/329208783",
+  "kinds": "religion,other_temples,interesting_places",
+  "point": {
+   "lon": 28.965974807739258,
+   "lat": 41.01865005493164
+  }
+ },
+ {
+  "xid": "N5244812084",
+  "name": "Kantarcılar Cami",
+  "dist": 365.97019491,
+  "rate": 1,
+  "osm": "node/5244812084",
+  "kinds": "religion,other_temples,interesting_places",
+  "point": {
+   "lon": 28.96599769592285,
+   "lat": 41.01865005493164
+  }
+ },
+ {
+  "xid": "W110239766",
+  "name": "Kaptanı Derya İbrahim Paşa Cami",
+  "dist": 370.51359174,
+  "rate": 1,
+  "osm": "way/110239766",
+  "kinds": "religion,other_temples,interesting_places",
+  "point": {
+   "lon": 28.962305068969727,
+   "lat": 41.01279067993164
+  }
+ },
+ {
+  "xid": "N5244795908",
+  "name": "Hasırcılar Mescidi",
+  "dist": 378.90924523,
+  "rate": 1,
+  "osm": "node/5244795908",
+  "kinds": "religion,other_temples,interesting_places",
+  "point": {
+   "lon": 28.96890640258789,
+   "lat": 41.0171012878418
+  }
+ },
+ {
+  "xid": "N5244812070",
+  "name": "Dostlar Tiyatrosu",
+  "dist": 392.00371198,
+  "rate": 3,
+  "osm": "node/5244812070",
+  "wikidata": "Q6100278",
+  "kinds": "cultural,theatres_and_entertainments,interesting_places,other_theatres",
+  "point": {
+   "lon": 28.96481704711914,
+   "lat": 41.018978118896484
+  }
+ },
+ {
+  "xid": "N7044425086",
+  "name": "Street Market",
+  "dist": 393.15625791,
+  "rate": 1,
+  "osm": "node/7044425086",
+  "kinds": "other,unclassified_objects,interesting_places,tourist_object",
+  "point": {
+   "lon": 28.96898078918457,
+   "lat": 41.01725769042969
+  }
+ },
+ {
+  "xid": "N5112738775",
+  "name": "Örücüler Hamamı Turkish Bath and Sauna",
+  "dist": 392.95514916,
+  "rate": 1,
+  "osm": "node/5112738775",
+  "kinds": "other,unclassified_objects,interesting_places,tourist_object",
+  "point": {
+   "lon": 28.967426300048828,
+   "lat": 41.01244354248047
+  }
+ },
+ {
+  "xid": "N5111205410",
+  "name": "Vafa molla gurani kabristani",
+  "dist": 395.36307728,
+  "rate": 1,
+  "osm": "node/5111205410",
+  "kinds": "cemeteries,historic,burial_places,interesting_places",
+  "point": {
+   "lon": 28.960346221923828,
+   "lat": 41.016117095947266
+  }
+ },
+ {
+  "xid": "W175518494",
+  "name": "Rüstem Pasha Mosque",
+  "dist": 399.03224152,
+  "rate": 3,
+  "osm": "way/175518494",
+  "wikidata": "Q1137511",
+  "kinds": "religion,mosques,interesting_places",
+  "point": {
+   "lon": 28.968698501586914,
+   "lat": 41.01766586303711
+  }
+ },
+ {
+  "xid": "N4509066189",
+  "name": "Vefa Kilise Mosque",
+  "dist": 406.84183981,
+  "rate": 3,
+  "osm": "node/4509066189",
+  "wikidata": "Q246275",
+  "kinds": "religion,churches,interesting_places,other_churches",
+  "point": {
+   "lon": 28.960275650024414,
+   "lat": 41.01634979248047
+  }
+ },
+ {
+  "xid": "N5244811484",
+  "name": "Mercan Cami",
+  "dist": 406.30059249,
+  "rate": 1,
+  "osm": "node/5244811484",
+  "kinds": "religion,other_temples,interesting_places",
+  "point": {
+   "lon": 28.967756271362305,
+   "lat": 41.01246643066406
+  }
+ },
+ {
+  "xid": "N5110347202",
+  "name": "Molla Gürani Camii",
+  "dist": 407.54313422,
+  "rate": 1,
+  "osm": "node/5110347202",
+  "kinds": "religion,other_temples,interesting_places",
+  "point": {
+   "lon": 28.960262298583984,
+   "lat": 41.01633834838867
+  }
+ },
+ {
+  "xid": "N5244811446",
+  "name": "Sultan Mustafa Cami",
+  "dist": 414.71146819,
+  "rate": 1,
+  "osm": "node/5244811446",
+  "kinds": "religion,other_temples,interesting_places",
+  "point": {
+   "lon": 28.968955993652344,
+   "lat": 41.01325988769531
+  }
+ },
+ {
+  "xid": "N5244798424",
+  "name": "Yeni Camii Meydanı",
+  "dist": 418.46622623,
+  "rate": 1,
+  "osm": "node/5244798424",
+  "kinds": "religion,other_temples,interesting_places",
+  "point": {
+   "lon": 28.969886779785156,
+   "lat": 41.015995025634766
+  }
+ },
+ {
+  "xid": "N5111205411",
+  "name": "Molla gurani camii",
+  "dist": 419.64876954,
+  "rate": 1,
+  "osm": "node/5111205411",
+  "kinds": "religion,other_temples,interesting_places",
+  "point": {
+   "lon": 28.9600887298584,
+   "lat": 41.01625442504883
+  }
+ },
+ {
+  "xid": "N5110347204",
+  "name": "Saribeyazit camii",
+  "dist": 425.24325317,
+  "rate": 1,
+  "osm": "node/5110347204",
+  "kinds": "religion,other_temples,interesting_places",
+  "point": {
+   "lon": 28.960933685302734,
+   "lat": 41.01776123046875
+  }
+ },
+ {
+  "xid": "N5111205415",
+  "name": "Saatci yokusu softa hatip cami",
+  "dist": 433.55991199,
+  "rate": 1,
+  "osm": "node/5111205415",
+  "kinds": "religion,other_temples,interesting_places",
+  "point": {
+   "lon": 28.963542938232422,
+   "lat": 41.019203186035156
+  }
+ },
+ {
+  "xid": "N5110344592",
+  "name": "Softa Hatip Cami",
+  "dist": 436.59432629,
+  "rate": 1,
+  "osm": "node/5110344592",
+  "kinds": "religion,other_temples,interesting_places",
+  "point": {
+   "lon": 28.963502883911133,
+   "lat": 41.019222259521484
+  }
+ },
+ {
+  "xid": "N5111205412",
+  "name": "Sari beyazit camii",
+  "dist": 437.95354919,
+  "rate": 1,
+  "osm": "node/5111205412",
+  "kinds": "religion,other_temples,interesting_places",
+  "point": {
+   "lon": 28.96077537536621,
+   "lat": 41.017791748046875
+  }
+ },
+ {
+  "xid": "W330903285",
+  "name": "Çelebioğlu Hoca Alaaddin Cami",
+  "dist": 441.80880699,
+  "rate": 1,
+  "osm": "way/330903285",
+  "kinds": "religion,other_temples,interesting_places",
+  "point": {
+   "lon": 28.970216751098633,
+   "lat": 41.01544189453125
+  }
+ },
+ {
+  "xid": "N5110342159",
+  "name": "",
+  "dist": 442.16730841,
+  "rate": 0,
+  "osm": "node/5110342159",
+  "kinds": "cemeteries,historic,burial_places,interesting_places",
+  "point": {
+   "lon": 28.95981788635254,
+   "lat": 41.01626205444336
+  }
+ },
+ {
+  "xid": "N4739616223",
+  "name": "نور اوبك",
+  "dist": 442.2760895,
+  "rate": 1,
+  "osm": "node/4739616223",
+  "kinds": "other,unclassified_objects,interesting_places,tourist_object",
+  "point": {
+   "lon": 28.970218658447266,
+   "lat": 41.01559066772461
+  }
+ },
+ {
+  "xid": "N4945509321",
+  "name": "Vefa",
+  "dist": 449.30047165,
+  "rate": 2,
+  "osm": "node/4945509321",
+  "wikidata": "Q331206",
+  "kinds": "fortifications,historic,interesting_places,castles",
+  "point": {
+   "lon": 28.959970474243164,
+   "lat": 41.01688766479492
+  }
+ },
+ {
+  "xid": "W330350873",
+  "name": "Hoca Gıyasettin Cami",
+  "dist": 457.60304188,
+  "rate": 1,
+  "osm": "way/330350873",
+  "kinds": "religion,other_temples,interesting_places",
+  "point": {
+   "lon": 28.961782455444336,
+   "lat": 41.01879119873047
+  }
+ },
+ {
+  "xid": "N5111205414",
+  "name": "Hoca giyaseddin camii",
+  "dist": 458.45723121,
+  "rate": 1,
+  "osm": "node/5111205414",
+  "kinds": "religion,other_temples,interesting_places",
+  "point": {
+   "lon": 28.961849212646484,
+   "lat": 41.018836975097656
+  }
+ },
+ {
+  "xid": "W110314231",
+  "name": "Theotokos Kyriotissa (Kalenderhane)",
+  "dist": 463.5837054,
+  "rate": 3,
+  "osm": "way/110314231",
+  "wikidata": "Q1758501",
+  "kinds": "religion,mosques,interesting_places",
+  "point": {
+   "lon": 28.960369110107422,
+   "lat": 41.013145446777344
+  }
+ },
+ {
+  "xid": "W440782193",
+  "name": "",
+  "dist": 464.00014538,
+  "rate": 0,
+  "osm": "way/440782193",
+  "kinds": "fortifications,defensive_walls,historic,interesting_places",
+  "point": {
+   "lon": 28.960086822509766,
+   "lat": 41.01350021362305
+  }
+ },
+ {
+  "xid": "N5110342142",
+  "name": "Molla Hüsrev cami Turbası",
+  "dist": 475.51984989,
+  "rate": 1,
+  "osm": "node/5110342142",
+  "kinds": "cemeteries,historic,burial_places,interesting_places",
+  "point": {
+   "lon": 28.959381103515625,
+   "lat": 41.01477813720703
+  }
+ },
+ {
+  "xid": "N5110342192",
+  "name": "Molla Hüsrev cami",
+  "dist": 481.36997289,
+  "rate": 1,
+  "osm": "node/5110342192",
+  "kinds": "religion,other_temples,interesting_places",
+  "point": {
+   "lon": 28.959360122680664,
+   "lat": 41.01457214355469
+  }
+ },
+ {
+  "xid": "W499944896",
+  "name": "Şeyh Ebül Vefa Cami",
+  "dist": 485.26332575,
+  "rate": 1,
+  "osm": "way/499944896",
+  "kinds": "religion,other_temples,interesting_places",
+  "point": {
+   "lon": 28.959562301635742,
+   "lat": 41.01698684692383
+  }
+ },
+ {
+  "xid": "W109980654",
+  "name": "Ahi Çelebi Mosque",
+  "dist": 484.73181085,
+  "rate": 3,
+  "osm": "way/109980654",
+  "wikidata": "Q6957244",
+  "kinds": "religion,mosques,interesting_places",
+  "point": {
+   "lon": 28.968408584594727,
+   "lat": 41.01894760131836
+  }
+ },
+ {
+  "xid": "N5111211794",
+  "name": "Haci kucuk camii",
+  "dist": 492.83367123,
+  "rate": 1,
+  "osm": "node/5111211794",
+  "kinds": "religion,other_temples,interesting_places",
+  "point": {
+   "lon": 28.970518112182617,
+   "lat": 41.0140380859375
+  }
+ },
+ {
+  "xid": "N5678862423",
+  "name": "Spice Shops",
+  "dist": 498.88961169,
+  "rate": 1,
+  "osm": "node/5678862423",
+  "kinds": "other,unclassified_objects,interesting_places,tourist_object",
+  "point": {
+   "lon": 28.97063636779785,
+   "lat": 41.016761779785156
+  }
+ },
+ {
+  "xid": "W330347793",
+  "name": "Tarakçılar Daye Hatun Cami",
+  "dist": 498.52961018,
+  "rate": 1,
+  "osm": "way/330347793",
+  "kinds": "religion,other_temples,interesting_places",
+  "point": {
+   "lon": 28.96909523010254,
+   "lat": 41.012229919433594
+  }
+ },
+ {
+  "xid": "W330903334",
+  "name": "Hacı Küçük Cami",
+  "dist": 499.90036013,
+  "rate": 1,
+  "osm": "way/330903334",
+  "kinds": "religion,other_temples,interesting_places",
+  "point": {
+   "lon": 28.97062873840332,
+   "lat": 41.01408767700195
+  }
+ }
+]

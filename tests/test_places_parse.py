@@ -6,6 +6,8 @@ import pytest
 from src.places_parse import (
     categorize,
     merge_wikipedia,
+    otm_category,
+    parse_opentripmap,
     parse_overpass,
     parse_wikipedia,
     remove_duplicates,
@@ -156,3 +158,78 @@ def test_duplicates_of_same_object_are_merged_but_different_places_kept():
     result = remove_duplicates([near, same_object, same_name_far, other])
 
     assert result == [near, same_name_far, other]
+
+
+def _otm(name: str) -> list[dict]:
+    return json.loads((FIXTURES / f"otm_{name}.json").read_text(encoding="utf-8"))
+
+
+def _otm_places(name: str) -> dict[str, dict]:
+    return {place["name"]: place for place in parse_opentripmap(_otm(name))}
+
+
+@pytest.mark.parametrize(
+    ("kinds", "expected"),
+    [
+        ("religion,mosques,interesting_places", "history_culture"),
+        ("cultural,museums,interesting_places,art_galleries", "history_culture"),
+        ("historic,archaeology,interesting_places", "history_culture"),
+        ("urban_environment,gardens_and_parks,cultural,interesting_places", "parks_nature"),
+        ("mountain_peaks,geological_formations,natural,interesting_places", "parks_nature"),
+        ("view_points,other,interesting_places", "viewpoints"),
+        # A restaurant tagged as a museum must not become a sight: food comes from Google.
+        ("cultural,museums,interesting_places,restaurants,foods", None),
+        ("cultural,theatres_and_entertainments,cinemas,interesting_places", None),
+        ("other,unclassified_objects,interesting_places,tourist_object", None),
+    ],
+)
+def test_opentripmap_kinds_map_to_categories(kinds, expected):
+    assert otm_category(kinds) == expected
+
+
+def test_opentripmap_residential_area_has_nothing_notable():
+    # Bakırköy: 5 named places, all rate 1 (no Wikidata entry). The bot must say "nothing".
+    assert _otm("bakirkoy") and parse_opentripmap(_otm("bakirkoy")) == []
+
+
+def test_opentripmap_keeps_best_known_place_and_sorts_by_distance():
+    places = _otm_places("suleymaniye")
+    mosque = places["Süleymaniye Mosque"]
+    assert mosque["rate"] == 7 and mosque["category_key"] == "history_culture"
+    assert places["Alfred Heilbronn Botanical Garden"]["category_key"] == "parks_nature"
+    assert all(place["rate"] >= 2 for place in places.values())
+    distances = [place["distance"] for place in parse_opentripmap(_otm("suleymaniye"))]
+    assert distances == sorted(distances)
+
+
+def test_opentripmap_drops_food_places_tagged_as_sights():
+    names = _otm_places("istiklal")
+    assert "Nizam Pide Galatasaray" not in names and "pera" not in names
+    assert "Pera Museum" in names
+
+
+def test_opentripmap_place_fields_are_not_swapped():
+    mosque = _otm_places("suleymaniye")["Süleymaniye Mosque"]
+    assert mosque["wikidata"] == "Q178643"
+    assert mosque["xid"] == "R1564032"
+    assert (mosque["latitude"], mosque["longitude"]) == (41.016300201416016, 28.963977813720703)
+    assert 100 < mosque["distance"] < 150
+    assert mosque["category"] == "Religion: Mosques"
+
+
+def test_opentripmap_same_mosque_mapped_twice_is_shown_once():
+    raw = [
+        p for p in parse_opentripmap(_otm("karagumruk")) if p["name"] == "Kara Ahmet Pasha Mosque"
+    ]
+    assert len(raw) == 2
+    deduped = remove_duplicates(parse_opentripmap(_otm("karagumruk")))
+    assert [p["name"] for p in deduped].count("Kara Ahmet Pasha Mosque") == 1
+
+
+def test_opentripmap_rate_tolerates_heritage_suffix_and_skips_incomplete_items():
+    items = [
+        {"name": "A", "kinds": "historic", "rate": "2h", "point": {"lat": 1, "lon": 2}, "dist": 5},
+        {"name": "B", "kinds": "historic", "rate": 3, "dist": 5},  # no coordinates
+        {"name": "", "kinds": "historic", "rate": 3, "point": {"lat": 1, "lon": 2}},  # no name
+    ]
+    assert [p["name"] for p in parse_opentripmap(items)] == ["A"]

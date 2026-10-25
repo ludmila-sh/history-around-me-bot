@@ -1,0 +1,110 @@
+[
+ {
+  "xid": "W308049449",
+  "name": "",
+  "dist": 221.72520607,
+  "rate": 0,
+  "osm": "way/308049449",
+  "kinds": "religion,other_temples,interesting_places",
+  "point": {
+   "lon": 28.87989616394043,
+   "lat": 40.97999572753906
+  }
+ },
+ {
+  "xid": "W465379303",
+  "name": "Meryem Ana Rosario Kilisesi",
+  "dist": 226.60956671,
+  "rate": 1,
+  "osm": "way/465379303",
+  "kinds": "religion,other_temples,interesting_places",
+  "point": {
+   "lon": 28.8797664642334,
+   "lat": 40.977108001708984
+  }
+ },
+ {
+  "xid": "W737646583",
+  "name": "",
+  "dist": 233.50329476,
+  "rate": 0,
+  "osm": "way/737646583",
+  "kinds": "religion,other_temples,interesting_places",
+  "point": {
+   "lon": 28.875213623046875,
+   "lat": 40.97883987426758
+  }
+ },
+ {
+  "xid": "N5059141021",
+  "name": "",
+  "dist": 348.82364885,
+  "rate": 0,
+  "osm": "node/5059141021",
+  "kinds": "view_points,other,interesting_places",
+  "point": {
+   "lon": 28.881549835205078,
+   "lat": 40.980220794677734
+  }
+ },
+ {
+  "xid": "N5069978737",
+  "name": "Türk Amerikan Derneği Yabancı Dil Kursları",
+  "dist": 374.14061805,
+  "rate": 1,
+  "osm": "node/5069978737",
+  "kinds": "other,unclassified_objects,interesting_places,tourist_object",
+  "point": {
+   "lon": 28.87503433227539,
+   "lat": 40.976104736328125
+  }
+ },
+ {
+  "xid": "W308049451",
+  "name": "Amine Hatun Cami",
+  "dist": 417.27979672,
+  "rate": 1,
+  "osm": "way/308049451",
+  "kinds": "religion,other_temples,interesting_places",
+  "point": {
+   "lon": 28.875978469848633,
+   "lat": 40.98207092285156
+  }
+ },
+ {
+  "xid": "N5184094322",
+  "name": "Republic Square",
+  "dist": 449.32262357,
+  "rate": 1,
+  "osm": "node/5184094322",
+  "kinds": "historic,monuments_and_memorials,interesting_places,monuments",
+  "point": {
+   "lon": 28.8738956451416,
+   "lat": 40.981239318847656
+  }
+ },
+ {
+  "xid": "N6906376960",
+  "name": "Atatürk Heykeli",
+  "dist": 470.16020721,
+  "rate": 1,
+  "osm": "node/6906376960",
+  "kinds": "historic,monuments_and_memorials,interesting_places,monuments",
+  "point": {
+   "lon": 28.87333869934082,
+   "lat": 40.98099136352539
+  }
+ },
+ {
+  "xid": "W737646588",
+  "name": "",
+  "dist": 470.05991469,
+  "rate": 0,
+  "osm": "way/737646588",
+  "kinds": "religion,other_temples,interesting_places",
+  "point": {
+   "lon": 28.87556266784668,
+   "lat": 40.98244857788086
+  }
+ }
+]

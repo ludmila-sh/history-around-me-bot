@@ -1,0 +1,187 @@
+[
+ {
+  "xid": "W23276383",
+  "name": "",
+  "dist": 173.0803956,
+  "rate": 0,
+  "osm": "way/23276383",
+  "kinds": "architecture,historic_architecture,towers,interesting_places,destroyed_objects,other_towers",
+  "point": {
+   "lon": 28.9306583404541,
+   "lat": 41.02576446533203
+  }
+ },
+ {
+  "xid": "W23276332",
+  "name": "",
+  "dist": 269.99412565,
+  "rate": 0,
+  "osm": "way/23276332",
+  "kinds": "architecture,towers,fortifications,historic,interesting_places,other_towers,fortified_towers",
+  "point": {
+   "lon": 28.928255081176758,
+   "lat": 41.02347183227539
+  }
+ },
+ {
+  "xid": "W330788268",
+  "name": "Neslişah Sultan Cami",
+  "dist": 297.08111323,
+  "rate": 1,
+  "osm": "way/330788268",
+  "kinds": "religion,other_temples,interesting_places",
+  "point": {
+   "lon": 28.933170318603516,
+   "lat": 41.02653884887695
+  }
+ },
+ {
+  "xid": "W330653517",
+  "name": "Fatma Sultan Cami",
+  "dist": 313.05880831,
+  "rate": 1,
+  "osm": "way/330653517",
+  "kinds": "religion,other_temples,interesting_places",
+  "point": {
+   "lon": 28.928525924682617,
+   "lat": 41.02238464355469
+  }
+ },
+ {
+  "xid": "W23276385",
+  "name": "Walls of Constantinople",
+  "dist": 316.80010566,
+  "rate": 3,
+  "osm": "way/23276385",
+  "wikidata": "Q89917",
+  "kinds": "fortifications,defensive_walls,historic,interesting_places",
+  "point": {
+   "lon": 28.932069778442383,
+   "lat": 41.027069091796875
+  }
+ },
+ {
+  "xid": "W508953834",
+  "name": "Mausoleum of Adnan Menderes",
+  "dist": 386.11770503,
+  "rate": 3,
+  "osm": "way/508953834",
+  "wikidata": "Q6022064",
+  "kinds": "historic,monuments_and_memorials,burial_places,interesting_places,mausoleums,monuments",
+  "point": {
+   "lon": 28.926929473876953,
+   "lat": 41.02538299560547
+  }
+ },
+ {
+  "xid": "N5100825082",
+  "name": "Kara Ahmet Pasha Mosque",
+  "dist": 396.03066402,
+  "rate": 3,
+  "osm": "node/5100825082",
+  "wikidata": "Q1572049",
+  "kinds": "religion,mosques,interesting_places",
+  "point": {
+   "lon": 28.92906379699707,
+   "lat": 41.02113342285156
+  }
+ },
+ {
+  "xid": "R7318631",
+  "name": "Kara Ahmet Pasha Mosque",
+  "dist": 397.2865336,
+  "rate": 3,
+  "osm": "relation/7318631",
+  "wikidata": "Q1572049",
+  "kinds": "religion,mosques,interesting_places",
+  "point": {
+   "lon": 28.928791046142578,
+   "lat": 41.021240234375
+  }
+ },
+ {
+  "xid": "W330654069",
+  "name": "Rum Ortodoks Kilisesi",
+  "dist": 401.30833573,
+  "rate": 1,
+  "osm": "way/330654069",
+  "kinds": "religion,other_temples,interesting_places",
+  "point": {
+   "lon": 28.9274959564209,
+   "lat": 41.02207946777344
+  }
+ },
+ {
+  "xid": "N4982505016",
+  "name": "Anıt Mezar Camii",
+  "dist": 429.2495236,
+  "rate": 1,
+  "osm": "node/4982505016",
+  "kinds": "religion,other_temples,interesting_places",
+  "point": {
+   "lon": 28.926374435424805,
+   "lat": 41.02533721923828
+  }
+ },
+ {
+  "xid": "W330654244",
+  "name": "Surp Nigogoyas Kilisesi",
+  "dist": 463.62312973,
+  "rate": 1,
+  "osm": "way/330654244",
+  "kinds": "religion,other_temples,interesting_places",
+  "point": {
+   "lon": 28.926921844482422,
+   "lat": 41.021724700927734
+  }
+ },
+ {
+  "xid": "N4903546222",
+  "name": "Aziyadé's tomb (Pierre Loti)",
+  "dist": 465.58023903,
+  "rate": 1,
+  "osm": "node/4903546222",
+  "kinds": "historic,burial_places,interesting_places,other_burial_places",
+  "point": {
+   "lon": 28.925987243652344,
+   "lat": 41.02305603027344
+  }
+ },
+ {
+  "xid": "N5100825071",
+  "name": "S. Nigoğayos Ermeni Kilisesi",
+  "dist": 468.03403566,
+  "rate": 1,
+  "osm": "node/5100825071",
+  "kinds": "religion,other_temples,interesting_places",
+  "point": {
+   "lon": 28.926816940307617,
+   "lat": 41.02176284790039
+  }
+ },
+ {
+  "xid": "W330787973",
+  "name": "Keçeçi Piri Cami",
+  "dist": 487.80988424,
+  "rate": 1,
+  "osm": "way/330787973",
+  "kinds": "religion,other_temples,interesting_places",
+  "point": {
+   "lon": 28.936359405517578,
+   "lat": 41.026405334472656
+  }
+ },
+ {
+  "xid": "W23276324",
+  "name": "Walls of Constantinople",
+  "dist": 499.26839479,
+  "rate": 3,
+  "osm": "way/23276324",
+  "wikidata": "Q89917",
+  "kinds": "fortifications,defensive_walls,historic,interesting_places",
+  "point": {
+   "lon": 28.926414489746094,
+   "lat": 41.021705627441406
+  }
+ }
+]

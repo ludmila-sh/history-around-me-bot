@@ -7,6 +7,7 @@ HISTORY = "history_culture"
 FOOD = "food_drinks"
 SHOPPING = "shopping"
 NATURE = "parks_nature"
+VIEWPOINT = "viewpoints"
 
 HISTORY_TOURISM = {"attraction", "museum", "gallery", "viewpoint", "artwork"}
 HISTORY_AMENITY = {"theatre", "arts_centre"}
@@ -32,6 +33,22 @@ NATURE_NATURAL = {"beach", "peak", "cave_entrance", "waterfall"}
 NOTABLE_WORSHIP_TAGS = ("wikidata", "wikipedia", "heritage", "historic")
 
 DISPLAY_KEYS = ("historic", "tourism", "amenity", "leisure", "natural", "shop")
+
+# OpenTripMap rate: 1 is mostly places without a Wikidata entry, 2-3 notable, 7 the best known.
+OTM_MIN_RATE = 2
+# Top-level OpenTripMap kinds (https://dev.opentripmap.org/catalog). Food comes from Google.
+OTM_EXCLUDED_KINDS = {"foods", "restaurants", "tourist_facilities", "cinemas", "destroyed_objects"}
+OTM_NATURE_KINDS = {"gardens_and_parks", "natural"}
+OTM_HISTORY_KINDS = {
+    "religion",
+    "cultural",
+    "historic",
+    "architecture",
+    "museums",
+    "fortifications",
+    "archaeology",
+}
+OTM_VIEW_KINDS = {"view_points"}
 
 
 def categorize(tags: dict[str, str]) -> str | None:
@@ -193,3 +210,59 @@ def merge_wikipedia(
                 place["wikipedia_lang"] = page["lang"]
                 break
     return places
+
+
+def otm_category(kinds: str) -> str | None:
+    """Map OpenTripMap `kinds` (comma-separated) to a bot category, or None to skip the place."""
+    parts = set(kinds.split(","))
+    if parts & OTM_EXCLUDED_KINDS:
+        return None
+    if parts & OTM_NATURE_KINDS:
+        return NATURE
+    if parts & OTM_HISTORY_KINDS:
+        return HISTORY
+    if parts & OTM_VIEW_KINDS:
+        return VIEWPOINT
+    return None
+
+
+def _otm_rate(item: dict[str, Any]) -> int:
+    """Rate as int; tolerates the documented "2h" form (h marks cultural heritage)."""
+    return int(str(item.get("rate", 0)).rstrip("h") or 0)
+
+
+def _otm_display_category(kinds: str) -> str:
+    parts = [kind for kind in kinds.split(",") if kind and kind != "interesting_places"]
+    if not parts:
+        return ""
+    names = [kind.replace("_", " ").title() for kind in dict.fromkeys((parts[0], parts[-1]))]
+    return ": ".join(names)
+
+
+def parse_opentripmap(items: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Turn an OpenTripMap `radius` response into notable, named, categorized places."""
+    places = []
+    for item in items:
+        name = item.get("name", "")
+        category_key = otm_category(item.get("kinds", ""))
+        point = item.get("point")
+        if not name or not category_key or not point or _otm_rate(item) < OTM_MIN_RATE:
+            continue
+        places.append(
+            {
+                "name": name,
+                "category_key": category_key,
+                "category": _otm_display_category(item["kinds"]),
+                "description": "",
+                "address": "",
+                "latitude": point["lat"],
+                "longitude": point["lon"],
+                "distance": item.get("dist", 0),
+                "source": "opentripmap",
+                "rate": _otm_rate(item),
+                "xid": item.get("xid", ""),
+                "wikipedia": "",
+                "wikidata": item.get("wikidata", ""),
+            }
+        )
+    return sorted(places, key=lambda place: place["distance"])

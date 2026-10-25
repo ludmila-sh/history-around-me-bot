@@ -8,6 +8,7 @@ from urllib.parse import urlparse
 import requests
 
 from src import places_parse as parse
+from src.config.config import app_settings
 from src.config.logging_config import get_logger
 
 logger = get_logger(__name__)
@@ -20,6 +21,7 @@ OVERPASS_URLS = (
     "https://overpass-api.de/api/interpreter",
     "https://z.overpass-api.de/api/interpreter",
 )
+OPENTRIPMAP_HOST = "opentripmap-places-v1.p.rapidapi.com"  # RapidAPI listing
 WIKIPEDIA_API = "https://{lang}.wikipedia.org/w/api.php"
 
 NEAR_RADIUS = 500  # ~5 minutes on foot
@@ -128,6 +130,28 @@ def _fetch_overpass(query: str) -> dict[str, Any]:
         except (requests.RequestException, ValueError) as e:
             logger.warning(f"Overpass failed on {urlparse(url).hostname}: {describe_error(e)}")
     raise PlacesUnavailable("all Overpass instances failed")
+
+
+def _fetch_opentripmap(lat: float, lon: float, radius: int, lang: str) -> list[dict[str, Any]]:
+    """Notable sights around a point; `lang` is "en" or "ru", the only languages it serves."""
+    response = requests.get(
+        f"https://{OPENTRIPMAP_HOST}/{lang}/places/radius",
+        params={
+            "lon": lon,
+            "lat": lat,
+            "radius": radius,
+            "kinds": "interesting_places",
+            "format": "json",
+            "limit": 500,
+        },
+        headers={
+            "X-RapidAPI-Key": app_settings.OPENTRIPMAP_API_KEY,
+            "X-RapidAPI-Host": OPENTRIPMAP_HOST,
+        },
+        timeout=REQUEST_TIMEOUT,
+    )
+    response.raise_for_status()
+    return response.json()
 
 
 def _wikipedia_languages(lang: str, places: list[dict[str, Any]]) -> list[str]:

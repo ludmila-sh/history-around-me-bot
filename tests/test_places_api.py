@@ -152,3 +152,34 @@ def test_overpass_query_covers_all_tag_keys_within_requested_radius():
     # dense categories skip relations on purpose, rarer ones keep them
     assert 'nwr["shop"' not in query and 'node["shop"' in query
     assert 'nwr["historic"' in query
+
+
+def test_opentripmap_request_uses_rapidapi_headers_and_language(monkeypatch):
+    seen = {}
+
+    def get(url, **kwargs):
+        seen.update(url=url, **kwargs)
+        return SimpleNamespace(raise_for_status=lambda: None, json=lambda: [{"name": "x"}])
+
+    monkeypatch.setattr(places_api.requests, "get", get)
+
+    assert places_api._fetch_opentripmap(41.0, 29.0, 500, "ru") == [{"name": "x"}]
+    assert seen["url"] == f"https://{places_api.OPENTRIPMAP_HOST}/ru/places/radius"
+    assert seen["params"]["radius"] == 500 and seen["params"]["kinds"] == "interesting_places"
+    assert seen["headers"]["X-RapidAPI-Key"] == "test-opentripmap-key"
+    assert "test-opentripmap-key" not in seen["url"]  # the key must never travel in the URL
+
+
+def test_opentripmap_http_error_is_raised_not_swallowed(monkeypatch):
+    def get(url, **kwargs):
+        response = requests.Response()
+        response.status_code = 429
+        response.url = url
+        return SimpleNamespace(
+            raise_for_status=lambda: (_ for _ in ()).throw(requests.HTTPError(response=response))
+        )
+
+    monkeypatch.setattr(places_api.requests, "get", get)
+    with pytest.raises(requests.HTTPError) as error:
+        places_api._fetch_opentripmap(41.0, 29.0, 500, "en")
+    assert places_api.describe_error(error.value) == f"HTTP 429 from {places_api.OPENTRIPMAP_HOST}"
