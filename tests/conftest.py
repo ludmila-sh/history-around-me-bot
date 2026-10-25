@@ -7,6 +7,8 @@ os.environ.update(
         "OPENROUTER_API_KEY": "test-openrouter-key",
         "LANGUAGE_MODEL_DEV": "test/dev-model",
         "LANGUAGE_MODEL_PROD": "test/prod-model",
+        "OPENTRIPMAP_API_KEY": "test-opentripmap-key",
+        "GOOGLE_PLACES_API_KEY": "test-google-key",
         "DEBUG": "True",
     }
 )

@@ -28,6 +28,10 @@ class AppSettings(BaseSettings):
     LANGUAGE_MODEL_DEV: str
     LANGUAGE_MODEL_PROD: str
 
+    # RapidAPI key for OpenTripMap (sights); Google key for Places API (New), used for food
+    OPENTRIPMAP_API_KEY: str
+    GOOGLE_PLACES_API_KEY: str
+
     SYSTEM_PROMPT: str = ""
 
     @property
