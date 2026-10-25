@@ -315,3 +315,22 @@ def test_food_without_price_is_kept_with_empty_price():
 )
 def test_price_uses_the_currency_from_the_source(price_range, expected):
     assert format_price_range(price_range) == expected
+
+
+def test_same_object_under_different_names_is_merged_by_wikidata():
+    # Requested in Russian, the node and the relation of one mosque come back with different names.
+    node = {"name": "Topkapı Camii", "wikidata": "Q1", "latitude": 41.0211, "longitude": 28.9290}
+    relation = {
+        "name": "Мечеть Кара-Ахмед",
+        "wikidata": "Q1",
+        "latitude": 41.0212,
+        "longitude": 28.9288,
+    }
+    other_wall = {"name": "Стены", "wikidata": "Q1", "latitude": 41.0300, "longitude": 28.9290}
+    no_wikidata_a = {"name": "A", "wikidata": "", "latitude": 41.0, "longitude": 29.0}
+    no_wikidata_b = {"name": "B", "wikidata": "", "latitude": 41.0, "longitude": 29.0}
+
+    result = remove_duplicates([node, relation, other_wall, no_wikidata_a, no_wikidata_b])
+
+    # Far-away segments of one long object stay separate; empty ids never match each other.
+    assert result == [node, other_wall, no_wikidata_a, no_wikidata_b]

@@ -136,21 +136,25 @@ def parse_overpass(
 
 
 def remove_duplicates(places: list[dict[str, Any]]) -> list[dict[str, Any]]:
-    """Drop the same object mapped twice (e.g. as a node and a way): same name within 75 m.
+    """Drop the same object mapped twice (e.g. as a node and a way) within 75 m.
 
+    Copies share a name or a Wikidata id (names differ when one copy is in another language).
     `places` must be sorted by distance, so the nearest copy is kept.
     """
+
+    def is_same(place: dict[str, Any], kept: dict[str, Any]) -> bool:
+        wikidata = place.get("wikidata")
+        same_object = _normalize(kept["name"]) == _normalize(place["name"]) or (
+            bool(wikidata) and wikidata == kept.get("wikidata")
+        )
+        return same_object and (
+            distance_m(place["latitude"], place["longitude"], kept["latitude"], kept["longitude"])
+            < 75
+        )
+
     unique: list[dict[str, Any]] = []
     for place in places:
-        name = _normalize(place["name"])
-        is_copy = any(
-            _normalize(kept["name"]) == name
-            and distance_m(
-                place["latitude"], place["longitude"], kept["latitude"], kept["longitude"]
-            )
-            < 75
-            for kept in unique
-        )
+        is_copy = any(is_same(place, kept) for kept in unique)
         if not is_copy:
             unique.append(place)
     return unique
