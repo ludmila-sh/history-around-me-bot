@@ -7,12 +7,14 @@ from src.config.logging_config import get_logger
 
 logger = get_logger(__name__)
 
-PROMPTS_FILE = Path(__file__).resolve().parents[2] / "data" / "prompts.yaml"
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+PROMPTS_FILE = PROJECT_ROOT / "data" / "prompts.yaml"
+ENV_FILE = PROJECT_ROOT / ".env"  # absolute: must not depend on the launch directory
 
 
 class AppSettings(BaseSettings):
     model_config = SettingsConfigDict(
-        env_file=".env",
+        env_file=ENV_FILE,
         env_file_encoding="utf-8",
         extra="ignore",
         hide_input_in_errors=True,  # never print secrets from .env in validation errors
