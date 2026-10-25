@@ -1,0 +1,21 @@
+{
+  "query": {
+    "pages": {
+      "101": {
+        "pageid": 101,
+        "title": "Süleymaniye Mosque",
+        "coordinates": [
+          {
+            "lat": 41.0163,
+            "lon": 28.964
+          }
+        ],
+        "pageprops": {
+          "wikibase_item": "Q178643"
+        },
+        "extract": "Test extract for the Süleymaniye Mosque article.",
+        "fullurl": "https://en.example.org/wiki/Suleymaniye_Mosque"
+      }
+    }
+  }
+}
