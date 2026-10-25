@@ -1,0 +1,699 @@
+[
+ {
+  "xid": "N4526947090",
+  "name": "Памятник Папе Римскому Иоанну XXII",
+  "dist": 38.55901875,
+  "rate": 1,
+  "osm": "node/4526947090",
+  "kinds": "historic,monuments_and_memorials,interesting_places,monuments",
+  "point": {
+   "lon": 28.97679328918457,
+   "lat": 41.03227996826172
+  }
+ },
+ {
+  "xid": "N6968819062",
+  "name": "SALT Beyoğlu",
+  "dist": 46.80808773,
+  "rate": 1,
+  "osm": "node/6968819062",
+  "kinds": "cultural,museums,interesting_places,art_galleries",
+  "point": {
+   "lon": 28.97609519958496,
+   "lat": 41.032073974609375
+  }
+ },
+ {
+  "xid": "Q31188024",
+  "name": "Panayia İsodion Church",
+  "dist": 59.81629267,
+  "rate": 2,
+  "wikidata": "Q31188024",
+  "kinds": "religion,churches,interesting_places,other_churches",
+  "point": {
+   "lon": 28.975833892822266,
+   "lat": 41.03277587890625
+  }
+ },
+ {
+  "xid": "W112619334",
+  "name": "Church of Saint Anthony of Padua",
+  "dist": 70.84283531,
+  "rate": 3,
+  "osm": "way/112619334",
+  "wikidata": "Q810122",
+  "kinds": "religion,churches,interesting_places,catholic_churches",
+  "point": {
+   "lon": 28.977197647094727,
+   "lat": 41.03227615356445
+  }
+ },
+ {
+  "xid": "N6581421222",
+  "name": "Meryem Ana",
+  "dist": 88.04266987,
+  "rate": 1,
+  "osm": "node/6581421222",
+  "kinds": "religion,other_temples,interesting_places",
+  "point": {
+   "lon": 28.97578239440918,
+   "lat": 41.033084869384766
+  }
+ },
+ {
+  "xid": "W501764195",
+  "name": "",
+  "dist": 88.28684431,
+  "rate": 0,
+  "osm": "way/501764195",
+  "kinds": "religion,other_temples,interesting_places",
+  "point": {
+   "lon": 28.975784301757812,
+   "lat": 41.03308868408203
+  }
+ },
+ {
+  "xid": "N654189927",
+  "name": "Garaj Istanbul",
+  "dist": 90.34508572,
+  "rate": 1,
+  "osm": "node/654189927",
+  "kinds": "cultural,theatres_and_entertainments,interesting_places,other_theatres",
+  "point": {
+   "lon": 28.977453231811523,
+   "lat": 41.03237533569336
+  }
+ },
+ {
+  "xid": "N278713308",
+  "name": "Holy Trinity",
+  "dist": 104.43764402,
+  "rate": 2,
+  "osm": "node/278713308",
+  "wikidata": "Q25474174",
+  "kinds": "religion,churches,interesting_places,catholic_churches",
+  "point": {
+   "lon": 28.975557327270508,
+   "lat": 41.03173065185547
+  }
+ },
+ {
+  "xid": "W224685413",
+  "name": "",
+  "dist": 104.70757094,
+  "rate": 0,
+  "osm": "way/224685413",
+  "kinds": "religion,other_temples,interesting_places",
+  "point": {
+   "lon": 28.97553062438965,
+   "lat": 41.03174591064453
+  }
+ },
+ {
+  "xid": "N4889959435",
+  "name": "Cinema Museum",
+  "dist": 115.02813913,
+  "rate": 1,
+  "osm": "node/4889959435",
+  "kinds": "cultural,museums,interesting_places,other_museums",
+  "point": {
+   "lon": 28.97772216796875,
+   "lat": 41.03264236450195
+  }
+ },
+ {
+  "xid": "N654205150",
+  "name": "Pera Museum",
+  "dist": 121.88376326,
+  "rate": 3,
+  "osm": "node/654205150",
+  "wikidata": "Q1662392",
+  "kinds": "cultural,museums,interesting_places,art_galleries",
+  "point": {
+   "lon": 28.97514533996582,
+   "lat": 41.0318603515625
+  }
+ },
+ {
+  "xid": "N4778529769",
+  "name": "",
+  "dist": 125.07239124,
+  "rate": 0,
+  "osm": "node/4778529769",
+  "kinds": "historic,monuments_and_memorials,interesting_places,monuments",
+  "point": {
+   "lon": 28.977262496948242,
+   "lat": 41.03334426879883
+  }
+ },
+ {
+  "xid": "N3386270532",
+  "name": "Galatasaray Museum",
+  "dist": 125.3326841,
+  "rate": 3,
+  "osm": "node/3386270532",
+  "wikidata": "Q3329724",
+  "kinds": "cultural,museums,interesting_places,art_galleries",
+  "point": {
+   "lon": 28.976940155029297,
+   "lat": 41.03348159790039
+  }
+ },
+ {
+  "xid": "N6185582262",
+  "name": "pera",
+  "dist": 140.17306613,
+  "rate": 3,
+  "osm": "node/6185582262",
+  "wikidata": "Q1662392",
+  "kinds": "cultural,museums,interesting_places,restaurants,foods,art_galleries,tourist_facilities",
+  "point": {
+   "lon": 28.975330352783203,
+   "lat": 41.03341293334961
+  }
+ },
+ {
+  "xid": "Q3582353",
+  "name": "église Saint-Louis-des-Français d'Istanbul",
+  "dist": 186.72639173,
+  "rate": 2,
+  "wikidata": "Q3582353",
+  "kinds": "religion,churches,interesting_places,other_churches",
+  "point": {
+   "lon": 28.976900100708008,
+   "lat": 41.030799865722656
+  }
+ },
+ {
+  "xid": "N4838509321",
+  "name": "",
+  "dist": 190.94998898,
+  "rate": 0,
+  "osm": "node/4838509321",
+  "kinds": "religion,other_temples,interesting_places",
+  "point": {
+   "lon": 28.976905822753906,
+   "lat": 41.03076171875
+  }
+ },
+ {
+  "xid": "Q3360967",
+  "name": "palais de France",
+  "dist": 191.39273334,
+  "rate": 2,
+  "wikidata": "Q3360967",
+  "kinds": "palaces,architecture,historic_architecture,interesting_places",
+  "point": {
+   "lon": 28.977222442626953,
+   "lat": 41.03083419799805
+  }
+ },
+ {
+  "xid": "W224685441",
+  "name": "",
+  "dist": 215.91225916,
+  "rate": 0,
+  "osm": "way/224685441",
+  "kinds": "religion,other_temples,interesting_places",
+  "point": {
+   "lon": 28.976261138916016,
+   "lat": 41.030494689941406
+  }
+ },
+ {
+  "xid": "N1346157988",
+  "name": "Kalvinist Kilise",
+  "dist": 216.13274858,
+  "rate": 1,
+  "osm": "node/1346157988",
+  "kinds": "religion,other_temples,interesting_places",
+  "point": {
+   "lon": 28.976253509521484,
+   "lat": 41.03049087524414
+  }
+ },
+ {
+  "xid": "Q20471350",
+  "name": "Surp Yerrortutyun Armenian Church",
+  "dist": 224.84148794,
+  "rate": 2,
+  "wikidata": "Q20471350",
+  "kinds": "religion,churches,interesting_places,other_churches",
+  "point": {
+   "lon": 28.97757911682129,
+   "lat": 41.034244537353516
+  }
+ },
+ {
+  "xid": "N4889959431",
+  "name": "ARTER",
+  "dist": 227.91905279,
+  "rate": 1,
+  "osm": "node/4889959431",
+  "kinds": "cultural,museums,interesting_places,other_museums",
+  "point": {
+   "lon": 28.975753784179688,
+   "lat": 41.03043746948242
+  }
+ },
+ {
+  "xid": "Q6024672",
+  "name": "Karikatür ve Mizah Müzesi",
+  "dist": 230.2374441,
+  "rate": 2,
+  "wikidata": "Q6024672",
+  "kinds": "museums,cultural,interesting_places,other_museums",
+  "point": {
+   "lon": 28.973779678344727,
+   "lat": 41.0330810546875
+  }
+ },
+ {
+  "xid": "N4889958232",
+  "name": "Borusan Art",
+  "dist": 244.8236912,
+  "rate": 1,
+  "osm": "node/4889958232",
+  "kinds": "cultural,museums,interesting_places,other_museums",
+  "point": {
+   "lon": 28.97545051574707,
+   "lat": 41.03034591674805
+  }
+ },
+ {
+  "xid": "N8010273385",
+  "name": "Nizam Pide Galatasaray",
+  "dist": 246.83020583,
+  "rate": 3,
+  "osm": "node/8010273385",
+  "wikidata": "Q3329724",
+  "kinds": "cultural,museums,interesting_places,restaurants,foods,art_galleries,tourist_facilities",
+  "point": {
+   "lon": 28.976577758789062,
+   "lat": 41.03465270996094
+  }
+ },
+ {
+  "xid": "N3360707037",
+  "name": "Church of Santa Maria Draperis",
+  "dist": 260.1789855,
+  "rate": 3,
+  "osm": "node/3360707037",
+  "wikidata": "Q32239",
+  "kinds": "religion,churches,interesting_places,catholic_churches",
+  "point": {
+   "lon": 28.976152420043945,
+   "lat": 41.03009796142578
+  }
+ },
+ {
+  "xid": "N6401339440",
+  "name": "Üç Haren Kilisesi",
+  "dist": 265.45135066,
+  "rate": 1,
+  "osm": "node/6401339440",
+  "kinds": "religion,other_temples,interesting_places",
+  "point": {
+   "lon": 28.97796058654785,
+   "lat": 41.03450393676758
+  }
+ },
+ {
+  "xid": "W331839273",
+  "name": "",
+  "dist": 266.0872974,
+  "rate": 0,
+  "osm": "way/331839273",
+  "kinds": "religion,other_temples,interesting_places",
+  "point": {
+   "lon": 28.977964401245117,
+   "lat": 41.03451156616211
+  }
+ },
+ {
+  "xid": "Q4400516",
+  "name": "Русская посольская церковь (Константинополь)",
+  "dist": 265.94351827,
+  "rate": 2,
+  "wikidata": "Q4400516",
+  "kinds": "religion,churches,interesting_places,other_churches",
+  "point": {
+   "lon": 28.976205825805664,
+   "lat": 41.03004455566406
+  }
+ },
+ {
+  "xid": "Q48969579",
+  "name": "Melkite Greek Catholic Cathedral, Istanbul",
+  "dist": 273.41431171,
+  "rate": 2,
+  "wikidata": "Q48969579",
+  "kinds": "religion,churches,interesting_places,other_churches",
+  "point": {
+   "lon": 28.976119995117188,
+   "lat": 41.034889221191406
+  }
+ },
+ {
+  "xid": "N4889958234",
+  "name": "ISTANBUL'74",
+  "dist": 285.98933989,
+  "rate": 1,
+  "osm": "node/4889958234",
+  "kinds": "cultural,museums,interesting_places,other_museums",
+  "point": {
+   "lon": 28.979589462280273,
+   "lat": 41.03329086303711
+  }
+ },
+ {
+  "xid": "N5665713222",
+  "name": "Atlas",
+  "dist": 304.55644277,
+  "rate": 2,
+  "osm": "node/5665713222",
+  "wikidata": "Q6065720",
+  "kinds": "cultural,cinemas,theatres_and_entertainments,interesting_places",
+  "point": {
+   "lon": 28.97917366027832,
+   "lat": 41.034183502197266
+  }
+ },
+ {
+  "xid": "W132270015",
+  "name": "Kamer Hatun Camii",
+  "dist": 312.96188167,
+  "rate": 1,
+  "osm": "way/132270015",
+  "kinds": "religion,other_temples,interesting_places",
+  "point": {
+   "lon": 28.974977493286133,
+   "lat": 41.0350456237793
+  }
+ },
+ {
+  "xid": "N6432240559",
+  "name": "Ortaoyuncular Tiyatrosu",
+  "dist": 318.67829058,
+  "rate": 2,
+  "osm": "node/6432240559",
+  "wikidata": "Q6028362",
+  "kinds": "cultural,theatres_and_entertainments,interesting_places,other_theatres",
+  "point": {
+   "lon": 28.979145050048828,
+   "lat": 41.034400939941406
+  }
+ },
+ {
+  "xid": "Q6035037",
+  "name": "Ses Theater",
+  "dist": 330.04525635,
+  "rate": 2,
+  "wikidata": "Q6035037",
+  "kinds": "theatres_and_entertainments,cultural,interesting_places,other_theatres",
+  "point": {
+   "lon": 28.97919273376465,
+   "lat": 41.034507751464844
+  }
+ },
+ {
+  "xid": "N3279398393",
+  "name": "The Museum of Innocence",
+  "dist": 332.96378736,
+  "rate": 3,
+  "osm": "node/3279398393",
+  "wikidata": "Q15961492",
+  "kinds": "cultural,museums,interesting_places,other_museums",
+  "point": {
+   "lon": 28.979787826538086,
+   "lat": 41.030906677246094
+  }
+ },
+ {
+  "xid": "N4566767689",
+  "name": "Madame Tussauds",
+  "dist": 368.22815908,
+  "rate": 1,
+  "osm": "node/4566767689",
+  "kinds": "cultural,museums,interesting_places,other_museums",
+  "point": {
+   "lon": 28.97970962524414,
+   "lat": 41.03459167480469
+  }
+ },
+ {
+  "xid": "N3785285730",
+  "name": "Cine Majestic",
+  "dist": 375.18521791,
+  "rate": 1,
+  "osm": "node/3785285730",
+  "kinds": "cultural,cinemas,theatres_and_entertainments,interesting_places",
+  "point": {
+   "lon": 28.980083465576172,
+   "lat": 41.03432083129883
+  }
+ },
+ {
+  "xid": "N5640069827",
+  "name": "Istanbul Museum of Modern Art",
+  "dist": 378.57899774,
+  "rate": 1,
+  "osm": "node/5640069827",
+  "kinds": "cultural,museums,interesting_places,art_galleries",
+  "point": {
+   "lon": 28.97330093383789,
+   "lat": 41.02994918823242
+  }
+ },
+ {
+  "xid": "N3811143694",
+  "name": "Stucco Museum",
+  "dist": 385.31806755,
+  "rate": 1,
+  "osm": "node/3811143694",
+  "kinds": "cultural,museums,interesting_places,other_museums",
+  "point": {
+   "lon": 28.978986740112305,
+   "lat": 41.029579162597656
+  }
+ },
+ {
+  "xid": "Q1335287",
+  "name": "Emek Sineması",
+  "dist": 391.48257017,
+  "rate": 2,
+  "wikidata": "Q1335287",
+  "kinds": "cinemas,cultural,theatres_and_entertainments,interesting_places",
+  "point": {
+   "lon": 28.97969627380371,
+   "lat": 41.034908294677734
+  }
+ },
+ {
+  "xid": "W247443009",
+  "name": "",
+  "dist": 397.30556812,
+  "rate": 0,
+  "osm": "way/247443009",
+  "kinds": "religion,other_temples,interesting_places",
+  "point": {
+   "lon": 28.98106575012207,
+   "lat": 41.0319709777832
+  }
+ },
+ {
+  "xid": "N4889959434",
+  "name": "Doğançay Museum",
+  "dist": 406.38882547,
+  "rate": 3,
+  "osm": "node/4889959434",
+  "wikidata": "Q5303887",
+  "kinds": "cultural,museums,interesting_places,art_galleries",
+  "point": {
+   "lon": 28.978370666503906,
+   "lat": 41.035770416259766
+  }
+ },
+ {
+  "xid": "Q25474044",
+  "name": "Surp Asdvadzadzin Ermeni Katolik Kilisesi",
+  "dist": 407.41303373,
+  "rate": 2,
+  "wikidata": "Q25474044",
+  "kinds": "religion,churches,interesting_places,other_churches",
+  "point": {
+   "lon": 28.97944450378418,
+   "lat": 41.0352783203125
+  }
+ },
+ {
+  "xid": "Q6019728",
+  "name": "Surp Hovhan Vosgeperan Kilisesi",
+  "dist": 407.41748739,
+  "rate": 2,
+  "wikidata": "Q6019728",
+  "kinds": "religion,churches,interesting_places,other_churches",
+  "point": {
+   "lon": 28.97944450378418,
+   "lat": 41.0352783203125
+  }
+ },
+ {
+  "xid": "W247240977",
+  "name": "Ali Aga Camii",
+  "dist": 416.33763363,
+  "rate": 1,
+  "osm": "way/247240977",
+  "kinds": "religion,other_temples,interesting_places",
+  "point": {
+   "lon": 28.98011589050293,
+   "lat": 41.029972076416016
+  }
+ },
+ {
+  "xid": "N4889959133",
+  "name": "",
+  "dist": 434.60405631,
+  "rate": 0,
+  "osm": "node/4889959133",
+  "kinds": "religion,other_temples,interesting_places",
+  "point": {
+   "lon": 28.97905158996582,
+   "lat": 41.029083251953125
+  }
+ },
+ {
+  "xid": "W331838750",
+  "name": "Saint Mary",
+  "dist": 445.16035974,
+  "rate": 1,
+  "osm": "way/331838750",
+  "kinds": "religion,other_temples,interesting_places",
+  "point": {
+   "lon": 28.979700088500977,
+   "lat": 41.035560607910156
+  }
+ },
+ {
+  "xid": "N4889905029",
+  "name": "",
+  "dist": 453.37077443,
+  "rate": 0,
+  "osm": "node/4889905029",
+  "kinds": "historic,monuments_and_memorials,interesting_places,monuments",
+  "point": {
+   "lon": 28.977079391479492,
+   "lat": 41.028385162353516
+  }
+ },
+ {
+  "xid": "Q784328",
+  "name": "Armenian Catholic Archeparchy of Istanbul",
+  "dist": 454.04559246,
+  "rate": 3,
+  "wikidata": "Q784328",
+  "kinds": "religion,other_temples,interesting_places",
+  "point": {
+   "lon": 28.979799270629883,
+   "lat": 41.03559875488281
+  }
+ },
+ {
+  "xid": "Q36174920",
+  "name": "Lale Sineması",
+  "dist": 461.77896548,
+  "rate": 1,
+  "wikidata": "Q36174920",
+  "kinds": "cinemas,cultural,theatres_and_entertainments,interesting_places",
+  "point": {
+   "lon": 28.98076629638672,
+   "lat": 41.03493881225586
+  }
+ },
+ {
+  "xid": "W46332545",
+  "name": "Alman Protestan Kilisesi",
+  "dist": 463.38563113,
+  "rate": 2,
+  "osm": "way/46332545",
+  "wikidata": "Q65741537",
+  "kinds": "religion,churches,interesting_places,other_churches",
+  "point": {
+   "lon": 28.97385025024414,
+   "lat": 41.03614044189453
+  }
+ },
+ {
+  "xid": "W571688662",
+  "name": "",
+  "dist": 463.40942315,
+  "rate": 0,
+  "osm": "way/571688662",
+  "kinds": "religion,other_temples,interesting_places",
+  "point": {
+   "lon": 28.974132537841797,
+   "lat": 41.0362434387207
+  }
+ },
+ {
+  "xid": "W155011489",
+  "name": "Ağa Camii",
+  "dist": 466.41926176,
+  "rate": 1,
+  "osm": "way/155011489",
+  "kinds": "religion,other_temples,interesting_places",
+  "point": {
+   "lon": 28.980661392211914,
+   "lat": 41.03510665893555
+  }
+ },
+ {
+  "xid": "W309036495",
+  "name": "Mosque Sururi Cami",
+  "dist": 466.90052495,
+  "rate": 1,
+  "osm": "way/309036495",
+  "kinds": "religion,other_temples,interesting_places",
+  "point": {
+   "lon": 28.972187042236328,
+   "lat": 41.03519058227539
+  }
+ },
+ {
+  "xid": "N3884609505",
+  "name": "Asri Turşucu",
+  "dist": 475.58846017,
+  "rate": 1,
+  "osm": "node/3884609505",
+  "kinds": "other,unclassified_objects,interesting_places,tourist_object",
+  "point": {
+   "lon": 28.982019424438477,
+   "lat": 41.03208923339844
+  }
+ },
+ {
+  "xid": "N7294561686",
+  "name": "entrance to museum",
+  "dist": 496.72590901,
+  "rate": 1,
+  "osm": "node/7294561686",
+  "kinds": "cultural,museums,interesting_places,other_museums",
+  "point": {
+   "lon": 28.974475860595703,
+   "lat": 41.028202056884766
+  }
+ },
+ {
+  "xid": "N4481947389",
+  "name": "Galata Mevlevi House Museum",
+  "dist": 498.71221937,
+  "rate": 2,
+  "osm": "node/4481947389",
+  "wikidata": "Q6090478",
+  "kinds": "religion,other_temples,cultural,museums,interesting_places,other_museums",
+  "point": {
+   "lon": 28.97443962097168,
+   "lat": 41.02819061279297
+  }
+ }
+]

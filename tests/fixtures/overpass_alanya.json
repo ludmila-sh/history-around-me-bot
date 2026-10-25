@@ -1,0 +1,30 @@
+{
+  "elements": [
+    {"type": "way", "id": 1, "center": {"lat": 36.5340, "lon": 32.0010},
+     "tags": {"historic": "tower", "tourism": "attraction", "name": "Kızıl Kule",
+              "name:ru": "Красная башня", "wikidata": "Q1001", "wikipedia": "tr:Kızıl Kule"}},
+    {"type": "node", "id": 2, "lat": 36.5322, "lon": 32.0003,
+     "tags": {"amenity": "cafe", "name": "Кофе и чай"}},
+    {"type": "node", "id": 3, "lat": 36.5325, "lon": 32.0005,
+     "tags": {"amenity": "place_of_worship", "religion": "muslim", "name": "Mahalle Camii"}},
+    {"type": "node", "id": 4, "lat": 36.5330, "lon": 31.9990,
+     "tags": {"amenity": "place_of_worship", "religion": "muslim", "name": "Eski Cami",
+              "wikidata": "Q1002"}},
+    {"type": "node", "id": 5, "lat": 36.5321, "lon": 32.0001,
+     "tags": {"tourism": "hotel", "name": "Sea Hotel"}},
+    {"type": "node", "id": 6, "lat": 36.5318, "lon": 32.0004,
+     "tags": {"shop": "souvenir", "name": "Hediyelik", "addr:street": "Iskele Caddesi",
+              "addr:housenumber": "7", "addr:city": "Alanya"}},
+    {"type": "node", "id": 7, "lat": 36.5315, "lon": 31.9995,
+     "tags": {"leisure": "park", "name": "Atatürk Parkı"}},
+    {"type": "node", "id": 8, "lat": 36.5324, "lon": 32.0002,
+     "tags": {"historic": "memorial"}},
+    {"type": "node", "id": 9, "lat": 36.5600, "lon": 32.0000,
+     "tags": {"historic": "ruins", "name": "Far Ruins"}},
+    {"type": "node", "id": 10, "lat": 36.5319, "lon": 32.0006,
+     "tags": {"amenity": "cafe", "name": "Museum Cafe"}},
+    {"type": "node", "id": 11, "lat": 36.5323, "lon": 31.9998,
+     "tags": {"amenity": "school", "name": "Alanya Lisesi"}},
+    {"type": "way", "id": 12, "tags": {"historic": "castle", "name": "No Center Castle"}}
+  ]
+}

@@ -1,9 +1,5 @@
-black
-openai
-pydantic
-pytest
-python-dotenv
-requests
-pyTelegramBotAPI
-python-telegram-bot
-pyyaml
+openai==3.26.0
+pydantic-settings==2.15.0
+python-telegram-bot==22.8
+PyYAML==6.0.3
+requests==2.34.2

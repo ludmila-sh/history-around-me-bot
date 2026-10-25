@@ -1,0 +1,18 @@
+{
+  "query": {
+    "pages": {
+      "21": {
+        "pageid": 21,
+        "title": "Atatürk Parkı",
+        "coordinates": [
+          {
+            "lat": 36.5316,
+            "lon": 31.9995
+          }
+        ],
+        "extract": "Atatürk Parkı, Alanya'da bir parktır.",
+        "fullurl": "https://tr.example.org/Ataturk"
+      }
+    }
+  }
+}

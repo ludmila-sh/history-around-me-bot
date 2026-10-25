@@ -1,5 +1,5 @@
 @echo off
 
-call ./py-install-requirements.cmd
+if not exist venv call ./py-install-requirements.cmd
 
-python ./src/run_bot.py
+venv\Scripts\python -m src.run_bot

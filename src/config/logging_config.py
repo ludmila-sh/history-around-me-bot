@@ -1,68 +1,48 @@
 import logging
 import os
-from datetime import datetime
+import sys
+from datetime import date
+from pathlib import Path
 
-# Define log directory
-ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../"))
-LOG_DIR = os.path.join(ROOT_DIR, "logs")
-os.makedirs(LOG_DIR, exist_ok=True)
-
-
-def get_daily_log_filename(base_name):
-    """Generate a log filename for the current date."""
-    date_str = datetime.now().strftime("%Y%m%d")
-    return os.path.join(LOG_DIR, f"{base_name}_{date_str}.log")
+LOG_DIR = Path(__file__).resolve().parents[2] / "logs"
+LOG_FORMAT = "%(asctime)s - %(name)s - %(levelname)s - %(funcName)s:%(lineno)d - %(message)s"
 
 
-class DailyRotatingFileHandler(logging.Handler):
-    """Custom handler to rotate log files daily with a consistent naming scheme."""
+class DailyFileHandler(logging.FileHandler):
+    """Write to <name>_YYYYMMDD.log and switch to a new file when the date changes."""
 
-    def __init__(self, base_name, level=logging.INFO):
-        super().__init__(level)
-        self.base_name = base_name
-        self.current_date = datetime.now().date()
-        self.log_file = get_daily_log_filename(self.base_name)
-        self.file_handler = self._create_file_handler()
+    def __init__(self, name: str, level: int) -> None:
+        self._name = name
+        self._date = date.today()
+        super().__init__(self._path(), encoding="utf-8")
+        self.setLevel(level)
 
-    def _create_file_handler(self):
-        handler = logging.FileHandler(self.log_file, mode="a", encoding="utf-8")
-        handler.setFormatter(
-            logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
-        )
-        return handler
+    def _path(self) -> str:
+        return str(LOG_DIR / f"{self._name}_{self._date:%Y%m%d}.log")
 
-    def emit(self, record):
-        current_date = datetime.now().date()
-        if current_date != self.current_date:
-            self.current_date = current_date
-            self.file_handler.close()
-            self.log_file = get_daily_log_filename(self.base_name)
-            self.file_handler = self._create_file_handler()
-        self.file_handler.emit(record)
-
-    def close(self):
-        self.file_handler.close()
-        super().close()
+    def emit(self, record: logging.LogRecord) -> None:
+        if date.today() != self._date:
+            self._date = date.today()
+            self.close()  # the stream is reopened lazily on the next emit
+            self.baseFilename = os.path.abspath(self._path())
+        super().emit(record)
 
 
-def setup_logging():
-    """Setup logging with daily rotating logs."""
-    logging.basicConfig(level=logging.INFO)
-    logger = logging.getLogger()
+def setup_logging(level: str = "INFO", log_to_file: bool = True) -> None:
+    """Configure the root logger: console always; daily files app / error (and debug)."""
+    numeric_level = logging.getLevelNamesMapping().get(level.upper(), logging.INFO)
+    handlers: list[logging.Handler] = [logging.StreamHandler(sys.stdout)]
+    if log_to_file:
+        LOG_DIR.mkdir(exist_ok=True)
+        handlers.append(DailyFileHandler("app", logging.INFO))
+        handlers.append(DailyFileHandler("error", logging.ERROR))
+        if numeric_level <= logging.DEBUG:
+            handlers.append(DailyFileHandler("debug", logging.DEBUG))
+    logging.basicConfig(level=numeric_level, format=LOG_FORMAT, handlers=handlers, force=True)
+    for noisy in ("httpx", "httpcore"):
+        logging.getLogger(noisy).setLevel(logging.WARNING)
 
-    # Add a console handler
-    console_handler = logging.StreamHandler()
-    console_handler.setFormatter(
-        logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
-    )
-    logger.addHandler(console_handler)
 
-    # Add a daily rotating file handler for info logs
-    info_handler = DailyRotatingFileHandler("info", level=logging.INFO)
-    logger.addHandler(info_handler)
-
-    # Add a separate file handler for error logs
-    error_handler = DailyRotatingFileHandler("error", level=logging.ERROR)
-    logger.addHandler(error_handler)
-
-    return logger
+def get_logger(name: str) -> logging.Logger:
+    """Return a logger; usually called as get_logger(__name__)."""
+    return logging.getLogger(name)

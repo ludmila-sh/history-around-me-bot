@@ -1,45 +1,51 @@
-import os
-from logging import getLogger
-from typing import List
+from pathlib import Path
+
 import yaml
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
-from dotenv import load_dotenv
-from pydantic.v1 import BaseSettings
+from src.config.logging_config import get_logger
 
-logger = getLogger(__name__)
+logger = get_logger(__name__)
+
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+PROMPTS_FILE = PROJECT_ROOT / "data" / "prompts.yaml"
+ENV_FILE = PROJECT_ROOT / ".env"  # absolute: must not depend on the launch directory
 
 
 class AppSettings(BaseSettings):
-    class Config:
-        env_file = ".env"
-        env_file_encoding = "utf-8"
+    model_config = SettingsConfigDict(
+        env_file=ENV_FILE,
+        env_file_encoding="utf-8",
+        extra="ignore",
+        hide_input_in_errors=True,  # never print secrets from .env in validation errors
+    )
 
-    OPENROUTER_API_KEY: str
-
-    LANGUAGE_MODEL: str
-
-    SYSTEM_PROMPT: str = None
+    DEBUG: bool = False
+    LOG_LEVEL: str = "INFO"
 
     TELEGRAM_BOT_TOKEN: str
+    ADMIN_USER_IDS: list[int] = []
 
-    ADMIN_USER_IDS: List[int] = []
+    OPENROUTER_API_KEY: str
+    LANGUAGE_MODEL_DEV: str
+    LANGUAGE_MODEL_PROD: str
 
-    def load_prompts_from_yaml(self, yaml_file="prompts.yaml"):
-        """Load prompts from the specified YAML file."""
-        root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../"))
-        docs_dir = "data"
-        yaml_file_full_path = os.path.join(root_dir, docs_dir, yaml_file)
+    # RapidAPI key for OpenTripMap (sights); Google key for Places API (New), used for food
+    OPENTRIPMAP_API_KEY: str
+    GOOGLE_PLACES_API_KEY: str
 
-        with open(yaml_file_full_path, "r", encoding="utf-8") as file:
+    SYSTEM_PROMPT: str = ""
+
+    @property
+    def LANGUAGE_MODEL(self) -> str:
+        return self.LANGUAGE_MODEL_DEV if self.DEBUG else self.LANGUAGE_MODEL_PROD
+
+    def load_prompts_from_yaml(self) -> None:
+        with PROMPTS_FILE.open(encoding="utf-8") as file:
             prompts = yaml.safe_load(file)
-
         self.SYSTEM_PROMPT = prompts.get("system_prompt", "")
 
 
-logger.info("Loading environment variables from .env file.")
-load_dotenv()
-
 app_settings = AppSettings()
 app_settings.load_prompts_from_yaml()
-logger.info(f"CONFIG (LANGUAGE_MODEL): {app_settings.LANGUAGE_MODEL}")
-logger.info(f"CONFIG (SYSTEM_PROMPT): {app_settings.SYSTEM_PROMPT}")
+logger.info(f"CONFIG: DEBUG={app_settings.DEBUG}, LANGUAGE_MODEL={app_settings.LANGUAGE_MODEL}")

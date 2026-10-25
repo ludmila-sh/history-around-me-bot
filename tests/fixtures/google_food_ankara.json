@@ -1,0 +1,646 @@
+[
+ {
+  "id": "ChIJ7Q0Xr21P0xQRRPsPkioSDqE",
+  "types": [
+   "bakery",
+   "food_store",
+   "store",
+   "food",
+   "point_of_interest",
+   "establishment"
+  ],
+  "location": {
+   "latitude": 39.940247299999996,
+   "longitude": 32.855391499999996
+  },
+  "rating": 4.3,
+  "priceLevel": "PRICE_LEVEL_MODERATE",
+  "userRatingCount": 996,
+  "displayName": {
+   "text": "Börekçi Hüseyin Usta",
+   "languageCode": "tr"
+  },
+  "primaryType": "bakery",
+  "priceRange": {
+   "startPrice": {
+    "currencyCode": "TRY",
+    "units": "200"
+   },
+   "endPrice": {
+    "currencyCode": "TRY",
+    "units": "400"
+   }
+  }
+ },
+ {
+  "id": "ChIJV-I0IlJP0xQR4RQLiBCtyAs",
+  "types": [
+   "restaurant",
+   "food",
+   "point_of_interest",
+   "establishment"
+  ],
+  "location": {
+   "latitude": 39.941674899999995,
+   "longitude": 32.8623366
+  },
+  "rating": 3.4,
+  "priceLevel": "PRICE_LEVEL_MODERATE",
+  "userRatingCount": 531,
+  "displayName": {
+   "text": "Ankara Hisar Kasrı",
+   "languageCode": "tr"
+  },
+  "primaryType": "restaurant",
+  "priceRange": {
+   "startPrice": {
+    "currencyCode": "TRY",
+    "units": "200"
+   },
+   "endPrice": {
+    "currencyCode": "TRY",
+    "units": "1200"
+   }
+  }
+ },
+ {
+  "id": "ChIJ60ib7mBO0xQR1SesZL9laYg",
+  "types": [
+   "turkish_restaurant",
+   "restaurant",
+   "food",
+   "point_of_interest",
+   "establishment"
+  ],
+  "location": {
+   "latitude": 39.940811100000005,
+   "longitude": 32.8573356
+  },
+  "rating": 4.3,
+  "priceLevel": "PRICE_LEVEL_MODERATE",
+  "userRatingCount": 1879,
+  "displayName": {
+   "text": "Azim Beşiktaş Döner",
+   "languageCode": "en"
+  },
+  "primaryType": "turkish_restaurant",
+  "priceRange": {
+   "startPrice": {
+    "currencyCode": "TRY",
+    "units": "400"
+   },
+   "endPrice": {
+    "currencyCode": "TRY",
+    "units": "600"
+   }
+  }
+ },
+ {
+  "id": "ChIJjZYkZmBO0xQREYoVnwUHqeo",
+  "types": [
+   "kebab_shop",
+   "restaurant",
+   "food",
+   "point_of_interest",
+   "establishment"
+  ],
+  "location": {
+   "latitude": 39.940569599999996,
+   "longitude": 32.8558862
+  },
+  "rating": 4.2,
+  "priceLevel": "PRICE_LEVEL_MODERATE",
+  "userRatingCount": 2431,
+  "displayName": {
+   "text": "Urfali Haci Mehmet",
+   "languageCode": "en"
+  },
+  "primaryType": "kebab_shop",
+  "priceRange": {
+   "startPrice": {
+    "currencyCode": "TRY",
+    "units": "400"
+   },
+   "endPrice": {
+    "currencyCode": "TRY",
+    "units": "800"
+   }
+  }
+ },
+ {
+  "id": "ChIJzULQHphP0xQRZfhlPpqC7Tw",
+  "types": [
+   "fast_food_restaurant",
+   "restaurant",
+   "food",
+   "point_of_interest",
+   "establishment"
+  ],
+  "location": {
+   "latitude": 39.9409147,
+   "longitude": 32.8548427
+  },
+  "rating": 3.7,
+  "priceLevel": "PRICE_LEVEL_MODERATE",
+  "userRatingCount": 1554,
+  "displayName": {
+   "text": "Burger King",
+   "languageCode": "en"
+  },
+  "primaryType": "fast_food_restaurant",
+  "priceRange": {
+   "startPrice": {
+    "currencyCode": "TRY",
+    "units": "200"
+   },
+   "endPrice": {
+    "currencyCode": "TRY",
+    "units": "400"
+   }
+  }
+ },
+ {
+  "id": "ChIJJXAccmRO0xQR5yQ1q6qf6xg",
+  "types": [
+   "cafe",
+   "food",
+   "point_of_interest",
+   "establishment"
+  ],
+  "location": {
+   "latitude": 39.944259599999995,
+   "longitude": 32.8599463
+  },
+  "rating": 4.2,
+  "priceLevel": "PRICE_LEVEL_MODERATE",
+  "userRatingCount": 879,
+  "displayName": {
+   "text": "KEMANKEŞ",
+   "languageCode": "tr"
+  },
+  "primaryType": "cafe",
+  "priceRange": {
+   "startPrice": {
+    "currencyCode": "TRY",
+    "units": "400"
+   },
+   "endPrice": {
+    "currencyCode": "TRY",
+    "units": "600"
+   }
+  }
+ },
+ {
+  "id": "ChIJqeH0XWBO0xQRMq87y06OfX8",
+  "types": [
+   "restaurant",
+   "banquet_hall",
+   "event_venue",
+   "soup_restaurant",
+   "food",
+   "point_of_interest",
+   "establishment"
+  ],
+  "location": {
+   "latitude": 39.940699599999995,
+   "longitude": 32.8559704
+  },
+  "rating": 4.2,
+  "priceLevel": "PRICE_LEVEL_MODERATE",
+  "userRatingCount": 806,
+  "displayName": {
+   "text": "Meşhur Paçacı Keyvan Lokantası",
+   "languageCode": "tr"
+  },
+  "primaryType": "restaurant",
+  "priceRange": {
+   "startPrice": {
+    "currencyCode": "TRY",
+    "units": "200"
+   },
+   "endPrice": {
+    "currencyCode": "TRY",
+    "units": "400"
+   }
+  }
+ },
+ {
+  "id": "ChIJEUV6XqlP0xQR-y8-RUBPfIE",
+  "types": [
+   "restaurant",
+   "food",
+   "point_of_interest",
+   "establishment"
+  ],
+  "location": {
+   "latitude": 39.946842499999995,
+   "longitude": 32.855581799999996
+  },
+  "rating": 4,
+  "priceLevel": "PRICE_LEVEL_MODERATE",
+  "userRatingCount": 418,
+  "displayName": {
+   "text": "Antik Şırdan Ulus",
+   "languageCode": "tr"
+  },
+  "primaryType": "restaurant",
+  "priceRange": {
+   "startPrice": {
+    "currencyCode": "TRY",
+    "units": "400"
+   },
+   "endPrice": {
+    "currencyCode": "TRY",
+    "units": "600"
+   }
+  }
+ },
+ {
+  "id": "ChIJwYsFnjFP0xQRIiLd1mBdEzA",
+  "types": [
+   "turkish_restaurant",
+   "restaurant",
+   "food",
+   "point_of_interest",
+   "establishment"
+  ],
+  "location": {
+   "latitude": 39.940801,
+   "longitude": 32.855151
+  },
+  "rating": 4.4,
+  "priceLevel": "PRICE_LEVEL_MODERATE",
+  "userRatingCount": 1075,
+  "displayName": {
+   "text": "ANGARA SOFRASI ULUS",
+   "languageCode": "tr"
+  },
+  "primaryType": "turkish_restaurant",
+  "priceRange": {
+   "startPrice": {
+    "currencyCode": "TRY",
+    "units": "400"
+   },
+   "endPrice": {
+    "currencyCode": "TRY",
+    "units": "600"
+   }
+  }
+ },
+ {
+  "id": "ChIJcT99X4pO0xQRygGiA-yqAms",
+  "types": [
+   "restaurant",
+   "food",
+   "point_of_interest",
+   "establishment"
+  ],
+  "location": {
+   "latitude": 39.9424766,
+   "longitude": 32.85255600000001
+  },
+  "rating": 4.5,
+  "priceLevel": "PRICE_LEVEL_MODERATE",
+  "userRatingCount": 383,
+  "displayName": {
+   "text": "Mehmetçik Gazinosu",
+   "languageCode": "tr"
+  },
+  "primaryType": "restaurant",
+  "priceRange": {
+   "startPrice": {
+    "currencyCode": "TRY",
+    "units": "200"
+   },
+   "endPrice": {
+    "currencyCode": "TRY",
+    "units": "400"
+   }
+  }
+ },
+ {
+  "id": "ChIJvWH0VNhP0xQRmr9k4OwqP2A",
+  "types": [
+   "turkish_restaurant",
+   "restaurant",
+   "food",
+   "point_of_interest",
+   "establishment"
+  ],
+  "location": {
+   "latitude": 39.944533,
+   "longitude": 32.858823
+  },
+  "rating": 3.7,
+  "priceLevel": "PRICE_LEVEL_MODERATE",
+  "userRatingCount": 420,
+  "displayName": {
+   "text": "Nazım Usta Hacıbayram Dönercisi",
+   "languageCode": "tr"
+  },
+  "primaryType": "turkish_restaurant",
+  "priceRange": {
+   "startPrice": {
+    "currencyCode": "TRY",
+    "units": "600"
+   },
+   "endPrice": {
+    "currencyCode": "TRY",
+    "units": "800"
+   }
+  }
+ },
+ {
+  "id": "ChIJJ_ALwGNO0xQR3M1unE92MvQ",
+  "types": [
+   "cafe",
+   "food",
+   "point_of_interest",
+   "establishment"
+  ],
+  "location": {
+   "latitude": 39.9449227,
+   "longitude": 32.857807099999995
+  },
+  "rating": 4.1,
+  "priceLevel": "PRICE_LEVEL_MODERATE",
+  "userRatingCount": 315,
+  "displayName": {
+   "text": "Kaf Hanımlar Konağı",
+   "languageCode": "tr"
+  },
+  "primaryType": "cafe",
+  "priceRange": {
+   "startPrice": {
+    "currencyCode": "TRY",
+    "units": "200"
+   },
+   "endPrice": {
+    "currencyCode": "TRY",
+    "units": "400"
+   }
+  }
+ },
+ {
+  "id": "ChIJ8WXRGQZP0xQR9GbMImGXDC0",
+  "types": [
+   "family_restaurant",
+   "restaurant",
+   "food",
+   "point_of_interest",
+   "establishment"
+  ],
+  "location": {
+   "latitude": 39.9438801,
+   "longitude": 32.853490799999996
+  },
+  "rating": 4.1,
+  "priceLevel": "PRICE_LEVEL_MODERATE",
+  "userRatingCount": 201,
+  "displayName": {
+   "text": "ARAS ET LOKANTASI",
+   "languageCode": "tr"
+  },
+  "primaryType": "family_restaurant",
+  "priceRange": {
+   "startPrice": {
+    "currencyCode": "TRY",
+    "units": "400"
+   },
+   "endPrice": {
+    "currencyCode": "TRY",
+    "units": "600"
+   }
+  }
+ },
+ {
+  "id": "ChIJK4-e12NO0xQRU3go39qtfRk",
+  "types": [
+   "kebab_shop",
+   "turkish_restaurant",
+   "restaurant",
+   "food",
+   "point_of_interest",
+   "establishment"
+  ],
+  "location": {
+   "latitude": 39.9439934,
+   "longitude": 32.857033799999996
+  },
+  "rating": 3.1,
+  "priceLevel": "PRICE_LEVEL_MODERATE",
+  "userRatingCount": 613,
+  "displayName": {
+   "text": "Özler Döner HacıBayram Şubesi",
+   "languageCode": "tr"
+  },
+  "primaryType": "turkish_restaurant",
+  "priceRange": {
+   "startPrice": {
+    "currencyCode": "TRY",
+    "units": "600"
+   },
+   "endPrice": {
+    "currencyCode": "TRY",
+    "units": "800"
+   }
+  }
+ },
+ {
+  "id": "ChIJzwaSAGFO0xQRMnxkHwJquVs",
+  "types": [
+   "turkish_restaurant",
+   "restaurant",
+   "food",
+   "point_of_interest",
+   "establishment"
+  ],
+  "location": {
+   "latitude": 39.942192899999995,
+   "longitude": 32.8570211
+  },
+  "rating": 3.8,
+  "priceLevel": "PRICE_LEVEL_MODERATE",
+  "userRatingCount": 743,
+  "displayName": {
+   "text": "Şöhretler ASPAVA",
+   "languageCode": "tr"
+  },
+  "primaryType": "turkish_restaurant",
+  "priceRange": {
+   "startPrice": {
+    "currencyCode": "TRY",
+    "units": "400"
+   },
+   "endPrice": {
+    "currencyCode": "TRY",
+    "units": "600"
+   }
+  }
+ },
+ {
+  "id": "ChIJD7k5EgBP0xQRnThwZ6oyEN0",
+  "types": [
+   "indonesian_restaurant",
+   "restaurant",
+   "food",
+   "point_of_interest",
+   "establishment"
+  ],
+  "location": {
+   "latitude": 39.9397091,
+   "longitude": 32.8592367
+  },
+  "rating": 4.6,
+  "priceLevel": "PRICE_LEVEL_MODERATE",
+  "userRatingCount": 57,
+  "displayName": {
+   "text": "Kafe Padang Uni Nita",
+   "languageCode": "en"
+  },
+  "primaryType": "indonesian_restaurant",
+  "priceRange": {
+   "startPrice": {
+    "currencyCode": "TRY",
+    "units": "200"
+   },
+   "endPrice": {
+    "currencyCode": "TRY",
+    "units": "400"
+   }
+  }
+ },
+ {
+  "id": "ChIJY7tUZ2FO0xQRqqxCdKO4jWY",
+  "types": [
+   "kebab_shop",
+   "turkish_restaurant",
+   "restaurant",
+   "food",
+   "point_of_interest",
+   "establishment"
+  ],
+  "location": {
+   "latitude": 39.942971899999996,
+   "longitude": 32.8574578
+  },
+  "rating": 4.2,
+  "priceLevel": "PRICE_LEVEL_MODERATE",
+  "userRatingCount": 986,
+  "displayName": {
+   "text": "Nazım Usta Hacıbayram Kebapçısı",
+   "languageCode": "tr"
+  },
+  "primaryType": "kebab_shop",
+  "priceRange": {
+   "startPrice": {
+    "currencyCode": "TRY",
+    "units": "400"
+   },
+   "endPrice": {
+    "currencyCode": "TRY",
+    "units": "600"
+   }
+  }
+ },
+ {
+  "id": "ChIJh2gGbGFO0xQR_vDTR6ZRLBA",
+  "types": [
+   "coffee_shop",
+   "cafe",
+   "food_store",
+   "store",
+   "food",
+   "point_of_interest",
+   "establishment"
+  ],
+  "location": {
+   "latitude": 39.94284630000001,
+   "longitude": 32.8574395
+  },
+  "rating": 4.8,
+  "priceLevel": "PRICE_LEVEL_MODERATE",
+  "userRatingCount": 161,
+  "displayName": {
+   "text": "Gül Coffee Shop",
+   "languageCode": "en"
+  },
+  "primaryType": "coffee_shop",
+  "priceRange": {
+   "startPrice": {
+    "currencyCode": "TRY",
+    "units": "200"
+   },
+   "endPrice": {
+    "currencyCode": "TRY",
+    "units": "400"
+   }
+  }
+ },
+ {
+  "id": "ChIJqfeAfGBO0xQRBx4A4dQemNo",
+  "types": [
+   "chicken_restaurant",
+   "turkish_restaurant",
+   "restaurant",
+   "food",
+   "point_of_interest",
+   "establishment"
+  ],
+  "location": {
+   "latitude": 39.9400796,
+   "longitude": 32.8566609
+  },
+  "rating": 4.4,
+  "priceLevel": "PRICE_LEVEL_MODERATE",
+  "userRatingCount": 608,
+  "displayName": {
+   "text": "Tapi Tavuk",
+   "languageCode": "tr"
+  },
+  "primaryType": "chicken_restaurant",
+  "priceRange": {
+   "startPrice": {
+    "currencyCode": "TRY",
+    "units": "200"
+   },
+   "endPrice": {
+    "currencyCode": "TRY",
+    "units": "400"
+   }
+  }
+ },
+ {
+  "id": "ChIJt1rz1mBO0xQRm9byROhTH3A",
+  "types": [
+   "steak_house",
+   "turkish_restaurant",
+   "restaurant",
+   "food",
+   "point_of_interest",
+   "establishment"
+  ],
+  "location": {
+   "latitude": 39.9413591,
+   "longitude": 32.8580985
+  },
+  "rating": 3.8,
+  "priceLevel": "PRICE_LEVEL_MODERATE",
+  "userRatingCount": 1023,
+  "displayName": {
+   "text": "Tevhid Et Lokantasi",
+   "languageCode": "en"
+  },
+  "primaryType": "restaurant",
+  "priceRange": {
+   "startPrice": {
+    "currencyCode": "TRY",
+    "units": "400"
+   },
+   "endPrice": {
+    "currencyCode": "TRY",
+    "units": "600"
+   }
+  }
+ }
+]
