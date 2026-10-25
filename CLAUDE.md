@@ -14,7 +14,7 @@ This is an existing project: its current structure and conventions win over the 
 
 ## Structure
 
-- `src/` — code: `run_bot.py` (entry point, Telegram handlers), `places_api.py` (place search), `utils.py` (LLM calls, formatting), `config/` (`config.py`, `logging_config.py`).
+- `src/` — code: `run_bot.py` (entry point, Telegram handlers), `bot_ui.py` (message texts and keyboards), `places_api.py` (network calls, search orchestration), `places_parse.py` (parsing, categories, ranking; no I/O), `utils.py` (LLM calls for the chat), `config/` (`config.py`, `logging_config.py`).
 - `data/prompts.yaml` — LLM prompts.
 - `tests/` — pytest tests.
 - `logs/` — runtime artifacts, not committed.
